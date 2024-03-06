@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Moving Image</title>
+  <style>
+    #image {
+      position: absolute;
+      left: 0;
+      transition: left 0.5s;
+    }
+  </style>
+  <script src=".../node_modules/socket.io/client-dist/socket.io.min.js"></script>
+</head>
+<body>
+  <canvas id="canvas" width="500" height="300"></canvas>
+  <img src="image.jpg" id="image">
+
+  <script>
+    const socket = io();
+    const canvas = document.getElementById("canvas");
+    const image = document.getElementById("image");
+
+    canvas.addEventListener("click", (event) => {
+      const rect = canvas.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      // Move the image to the position of the click
+      image.style.left = `${x}px`;
+
+      // Emit 'move image' event
+      socket.emit('move image', { x });
+    });
+
+    // Listen for 'move image' event
+    socket.on('move image', (data) => {
+      image.style.left = `${data.x}px`;
+    });
+  </script>
+</body>
+</html>
