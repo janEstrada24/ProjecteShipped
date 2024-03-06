@@ -12,19 +12,19 @@ app.use(express.static(path.join(__dirname, "Html")));
 
 io.on("connection", (socket) => {
   console.log("New client connected");
-  socket.emit("move image", { x, y });
 
-  // Server-side code
-  const io = require("socket.io")(httpServer, {
-    // options...
-  });
+  socket.on("move image", (coords) => {
+    // Notify all clients that the image is about to move
+    socket.broadcast.emit("pre move image", coords);
 
-  io.on("connection", (socket) => {
-    socket.on("move image", (coords) => {
-      // Broadcast the 'move image' event with the coordinates to all other connected clients
-      socket.broadcast.emit("move image", coords);
-    });
+    // Then move the image
+    socket.broadcast.emit("move image", coords);
+
+    // Check if the image has been detected
+    let imageDetected = checkImageDetection(); // replace this with your image detection logic
+
+    // Send the image detection status to the client
+    socket.emit("image detection", { detected: imageDetected });
   });
 });
-
 server.listen(3000, () => console.log("Listening on port 3000"));
