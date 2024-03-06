@@ -1,0 +1,20 @@
+.container {
+    position: relative;
+    overflow: hidden;
+    width: 100%; /* Ajusta según el tamaño de tu contenedor */
+    height: 200px; /* Ajusta según el tamaño de tu imagen */
+}
+
+.moving-image {
+    position: absolute;
+    animation: moveRight 5s linear infinite; /* Controla la velocidad ajustando el tiempo */
+}
+
+@keyframes moveRight {
+    from {
+        left: 0;
+    }
+    to {
+        left: 100%; /* Mueve la imagen completamente hacia la derecha */
+    }
+}
