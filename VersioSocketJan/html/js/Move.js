@@ -8,29 +8,32 @@ window.onload = function start() {
         "A": false,
         "D": false,
         "W": false,
-        "S": false,
-        "a": false,
-        "d": false,
-        "w": false,
-        "s": false
+        "S": false
     };
 
     function moveImage() {
-        if (keysPressed["A"] || keysPressed["a"]) {
-            position.top -= speed;
-        }
-        if (keysPressed["D"] || keysPressed["d"]) {
-            position.top += speed;
-        }
-        if (keysPressed["W"] || keysPressed["w"]) {
+        if (keysPressed["A"]) {
             position.left -= speed;
         }
-        if (keysPressed["S"] || keysPressed["s"]) {
+        if (keysPressed["D"]) {
             position.left += speed;
+        }
+        if (keysPressed["W"]) {
+            position.top -= speed;
+        }
+        if (keysPressed["S"]) {
+            position.top += speed;
         }
         
         image.style.left = position.left + "px";
         image.style.top = position.top + "px";
+        if (position >= window.innerWidth) {
+            position = -image.width;
+        }
+        if (position >= window.innerHeight) {
+            position = -image.height;
+        }
+        requestAnimationFrame(moveImage);
     }
 
     function moveRight() {
@@ -50,8 +53,11 @@ window.onload = function start() {
     }
 
     window.addEventListener("keydown", function(event) {
-        if (event.key in keysPressed) {
-            keysPressed[event.key] = true;
+        if (event.key.toUpperCase() in keysPressed) {
+            for (var key in keysPressed) {
+                keysPressed[key] = false;
+            }
+            keysPressed[event.key.toUpperCase()] = true;
         }
         /*if (event.key === "W" || event.key === "w") {
             direction = "up";
@@ -75,12 +81,6 @@ window.onload = function start() {
             //setInterval(moveRight, 10);
             console.log("Tecla 'D' o 'd' premuda");
         }*/
-    });
-
-    window.addEventListener('keyup', function(event) {
-        if (event.key in keysPressed) {
-            keysPressed[event.key] = false;
-        }
     });
 
     moveImage();
