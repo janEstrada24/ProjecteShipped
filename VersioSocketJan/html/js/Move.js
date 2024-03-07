@@ -13,24 +13,28 @@ window.onload = function start() {
     function moveImage() {
         if (keysPressed["A"]) {
             position.left -= speed;
+            image.style.transform = 'rotate(180deg)';
             if (position.left < -image.offsetWidth) {
                 position.left = window.innerWidth;
             }
         }
         if (keysPressed["D"]) {
             position.left += speed;
+            image.style.transform = 'rotate(0deg)';
             if (position.left > window.innerWidth) {
                 position.left = -image.offsetWidth;
             }
         }
         if (keysPressed["W"]) {
             position.top -= speed;
+            image.style.transform = 'rotate(270deg)';
             if (position.top < -image.offsetHeight) {
                 position.top = window.innerHeight;
             }
         }
         if (keysPressed["S"]) {
             position.top += speed;
+            image.style.transform = 'rotate(90deg)';
             if (position.top > window.innerHeight) {
                 position.top = -image.offsetHeight;
             }
