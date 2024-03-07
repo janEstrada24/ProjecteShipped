@@ -2,7 +2,7 @@ window.onload = function () {
   let imgs = document.querySelectorAll(
     'img[src="/Images/VaixellVerdIBlau.jpg"]'
   );
-  let speed = 0.2;
+  let speed = 1;
   let positions = Array(imgs.length).fill(0);
   let moveLeft = true;
   let moveTop = false;
@@ -11,22 +11,33 @@ window.onload = function () {
 
   function animate() {
     for (let i = 0; i < imgs.length; i++) {
+      let imgWidth = imgs[i].offsetWidth;
+      let imgHeight = imgs[i].offsetHeight;
+  
       if (moveLeft) {
         positions[i] += speed;
+        if (positions[i] > window.innerWidth) {
+          positions[i] = -imgWidth;
+        }
         imgs[i].style.left = positions[i] + "px";
       } else if (moveBottom) {
         positions[i] -= speed;
+        if (positions[i] < -imgHeight) {
+          positions[i] = window.innerHeight;
+        }
         imgs[i].style.top = positions[i] + "px";
       } else if (moveRight) {
         positions[i] -= speed;
+        if (positions[i] < -imgWidth) {
+          positions[i] = window.innerWidth;
+        }
         imgs[i].style.left = positions[i] + "px";
       } else if (moveTop) {
         positions[i] += speed;
+        if (positions[i] > window.innerHeight) {
+          positions[i] = -imgHeight;
+        }
         imgs[i].style.top = positions[i] + "px";
-      }
-
-      if (positions[i] > window.innerWidth) {
-        positions[i] = -imgs[i].offsetWidth;
       }
     }
 
