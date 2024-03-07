@@ -13,31 +13,33 @@ window.onload = function () {
     for (let i = 0; i < imgs.length; i++) {
       let imgWidth = imgs[i].offsetWidth;
       let imgHeight = imgs[i].offsetHeight;
+      let currentLeft = imgs[i].offsetLeft;
+      let currentTop = imgs[i].offsetTop;
   
       if (moveLeft) {
-        positions[i] += speed;
-        if (positions[i] > window.innerWidth) {
-          positions[i] = -imgWidth;
+        currentLeft += speed;
+        if (currentLeft > window.innerWidth) {
+          currentLeft = -imgWidth;
         }
-        imgs[i].style.left = positions[i] + "px";
+        imgs[i].style.left = currentLeft + "px";
       } else if (moveBottom) {
-        positions[i] -= speed;
-        if (positions[i] < -imgHeight) {
-          positions[i] = window.innerHeight;
+        currentTop -= speed;
+        if (currentTop < -imgHeight) {
+          currentTop = window.innerHeight;
         }
-        imgs[i].style.top = positions[i] + "px";
+        imgs[i].style.top = currentTop + "px";
       } else if (moveRight) {
-        positions[i] -= speed;
-        if (positions[i] < -imgWidth) {
-          positions[i] = window.innerWidth;
+        currentLeft -= speed;
+        if (currentLeft < -imgWidth) {
+          currentLeft = window.innerWidth;
         }
-        imgs[i].style.left = positions[i] + "px";
+        imgs[i].style.left = currentLeft + "px";
       } else if (moveTop) {
-        positions[i] += speed;
-        if (positions[i] > window.innerHeight) {
-          positions[i] = -imgHeight;
+        currentTop += speed;
+        if (currentTop > window.innerHeight) {
+          currentTop = -imgHeight;
         }
-        imgs[i].style.top = positions[i] + "px";
+        imgs[i].style.top = currentTop + "px";
       }
     }
 
