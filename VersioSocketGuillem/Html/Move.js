@@ -15,7 +15,7 @@ window.onload = function () {
       let imgHeight = imgs[i].offsetHeight;
       let currentLeft = imgs[i].offsetLeft;
       let currentTop = imgs[i].offsetTop;
-  
+
       if (moveLeft) {
         currentLeft += speed;
         if (currentLeft > window.innerWidth) {
@@ -48,43 +48,82 @@ window.onload = function () {
 
   animate();
 
-
-  window.addEventListener('keydown', function (event) {
-    if (event.key === 's' || event.key === 'S') {
+  window.addEventListener("keydown", function (event) {
+    if (event.key === "s" || event.key === "S") {
       moveLeft = false;
       moveTop = true;
       moveRight = false;
       moveBottom = false;
       for (let i = 0; i < imgs.length; i++) {
-        imgs[i].style.transform = 'rotate(90deg)';
+        imgs[i].style.transform = "rotate(90deg)";
       }
-    } else if (event.key === 'd' || event.key === 'D') {
+    } else if (event.key === "d" || event.key === "D") {
       moveLeft = true;
       moveTop = false;
       moveRight = false;
       moveBottom = false;
       for (let i = 0; i < imgs.length; i++) {
-        imgs[i].style.transform = 'rotate(0deg)';
+        imgs[i].style.transform = "rotate(0deg)";
       }
-    }else if (event.key === 'a' || event.key === 'A') {
+    } else if (event.key === "a" || event.key === "A") {
       moveLeft = false;
       moveTop = false;
       moveRight = true;
       moveBottom = false;
       for (let i = 0; i < imgs.length; i++) {
-        imgs[i].style.transform = 'rotate(180deg)';
+        imgs[i].style.transform = "rotate(180deg)";
       }
-    } else if(event.key === 'w' || event.key === 'W'){
+    } else if (event.key === "w" || event.key === "W") {
       moveLeft = false;
       moveTop = false;
       moveRight = false;
       moveBottom = true;
       for (let i = 0; i < imgs.length; i++) {
-        imgs[i].style.transform = 'rotate(270deg)';
+        imgs[i].style.transform = "rotate(270deg)";
       }
-    
-   
     }
+    const socket = io();
+
+    window.addEventListener("keydown", function (event) {
+      const key = event.key;
+      socket.emit("keyPress", key);
+    });
+    // Aquí es donde agregas el código de Socket.IO
+    
+    socket.on("keyPress", function (key) {
+      if (key === "a" || key === "A") {
+        moveLeft = false;
+        moveTop = false;
+        moveRight = true;
+        moveBottom = false;
+        for (let i = 0; i < imgs.length; i++) {
+          imgs[i].style.transform = "rotate(180deg)";
+        }
+      } else if (key === "d" || key === "D") {
+        moveLeft = true;
+        moveTop = false;
+        moveRight = false;
+        moveBottom = false;
+        for (let i = 0; i < imgs.length; i++) {
+          imgs[i].style.transform = "rotate(0deg)";
+        }
+      } else if (key === "w" || key === "W") {
+        moveLeft = false;
+        moveTop = false;
+        moveRight = false;
+        moveBottom = true;
+        for (let i = 0; i < imgs.length; i++) {
+          imgs[i].style.transform = "rotate(270deg)";
+        }
+      } else if (key === "s" || key === "S") {
+        moveLeft = false;
+        moveTop = true;
+        moveRight = false;
+        moveBottom = false;
+        for (let i = 0; i < imgs.length; i++) {
+          imgs[i].style.transform = "rotate(90deg)";
+        }
+      }
+    });
   });
- 
-}
+};
