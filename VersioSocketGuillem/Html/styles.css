@@ -3,3 +3,7 @@ img[src="/Images/VaixellVerdIBlau.jpg"] {
     width: 2%;
   height: auto;
   }
+#myImage {
+    position: absolute;
+
+}
