@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", function() {
+window.onload = function start() {
     var image = document.getElementById("imatge");
     var position = 0;
-    var speed = 2; 
-
+    var speed = 1; 
+    
     function moveRight() {
         position += speed;
         image.style.left = position + "px";
@@ -10,6 +10,6 @@ document.addEventListener("DOMContentLoaded", function() {
             position = -image.width;
         }
     }
-
+    
     setInterval(moveRight, 10);
-});
+}

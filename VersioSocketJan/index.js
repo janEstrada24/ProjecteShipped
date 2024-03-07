@@ -7,6 +7,7 @@ const io = new Server(server);
 const path = require('path');
 
 app.use(express.static(path.join(__dirname, "/html")));
+app.use(express.static(path.join(__dirname, "/js")));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/html/index.html');
