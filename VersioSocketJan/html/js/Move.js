@@ -2,6 +2,10 @@ window.onload = function start() {
     var image = document.getElementById("imatge");
     var position = { left: 0, top: 0 };
     var speed = 1; 
+    
+    require('dotenv').config();
+    console.log(process.env.IP_SOCKET);
+    const socket = new WebSocket('ws://localhost:8080');
 
     var keysPressed = {
         "A": false,
