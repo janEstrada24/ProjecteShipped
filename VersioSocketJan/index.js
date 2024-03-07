@@ -1,22 +1,10 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const server = http.createServer(app);
-const { Server } = require("socket.io");
-const io = new Server(server);
-const path = require('path');
+import { WebSocketServer } from "ws";
 
-app.use(express.static(path.join(__dirname, "/html")));
-app.use(express.static(path.join(__dirname, "/js")));
+const wss = new WebSocketServer({ port: 8080 });
 
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/html/index.html');
-});
-
-io.on('connection', (socket) => {
-  console.log('a user connected');
-});
-
-server.listen(3000, () => {
-  console.log('listening on *:3000');
+wss.on("connection", (ws) => {
+  ws.on("message", (message) => {
+    console.log(`Received message => ${message}`);
+  });
+  ws.send("Hello! Message From Server!!");
 });
