@@ -12,17 +12,26 @@ app.use(express.static(path.join(__dirname, "/js")));
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
-  ws.on("message", (message) => {
-    console.log(`Received message => ${message}`);
-  });
-  ws.send("Hello! Message From Server!!");
-});
+    ws.on("message", function incoming(message) {
+        try {
+            const data = JSON.parse(message);
+            console.log(data);
 
-wss.on("keyPress", (ws) => {
-    ws.on("message", (message) => {
-        console.log(`Received message => ${message}`);
+            if (data && data.key) {
+                wss.clients.forEach(function each(client) {
+                    if (client !== ws && client.readyState === WebSocket.OPEN) {
+                        client.send(JSON.stringify(data));
+                    }
+                });
+            }
+        } catch (error) {
+            console.error("Error to process message: " + error);
+        }
     });
-    ws.send("Hello! Message From Server!!");
+    /*ws.on("message", (message) => {
+        console.log(`Received message => ${message}`);
+    });*/
+  ws.send("Hello! Message From Server!!");
 });
 
 wss.on("closed", function close() {

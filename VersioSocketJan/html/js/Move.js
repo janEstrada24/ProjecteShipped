@@ -3,9 +3,7 @@ window.onload = function start() {
     var position = { left: 0, top: 0 };
     var speed = 1; 
     
-    require('dotenv').config();
-    console.log(process.env.IP_SOCKET);
-    const socket = new WebSocket('ws://localhost:8080');
+    const webSocket = new WebSocket('ws://172.23.1.129:3000');
 
     var keysPressed = {
         "A": false,
@@ -16,6 +14,7 @@ window.onload = function start() {
 
     function moveImage() {
         if (keysPressed["A"]) {
+            webSocket.send(JSON.stringify({key: "A"}));
             position.left -= speed;
             image.style.transform = 'rotate(180deg)';
             if (position.left < -image.offsetWidth) {
@@ -23,6 +22,7 @@ window.onload = function start() {
             }
         }
         if (keysPressed["D"]) {
+            webSocket.send(JSON.stringify({key: "D"}));
             position.left += speed;
             image.style.transform = 'rotate(0deg)';
             if (position.left > window.innerWidth) {
@@ -30,6 +30,7 @@ window.onload = function start() {
             }
         }
         if (keysPressed["W"]) {
+            webSocket.send(JSON.stringify({key: "W"}));
             position.top -= speed;
             image.style.transform = 'rotate(270deg)';
             if (position.top < -image.offsetHeight) {
@@ -37,6 +38,7 @@ window.onload = function start() {
             }
         }
         if (keysPressed["S"]) {
+            webSocket.send(JSON.stringify({key: "S"}));
             position.top += speed;
             image.style.transform = 'rotate(90deg)';
             if (position.top > window.innerHeight) {
