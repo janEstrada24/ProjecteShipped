@@ -41,31 +41,6 @@ wss.on("connection", (ws) => {
     });
 });
 
-wss.on("message", function incoming(message) {
-    try {
-        const data = JSON.parse(message);
-        console.log("Message from client: " + data.key);
-
-        if (data && data.key) {
-            wss.clients.forEach(function each(client) {
-                if (client !== ws && client.readyState === WebSocket.OPEN) {
-                    client.send(JSON.stringify(data));
-                }
-            });
-        }
-    } catch (error) {
-        console.error("Error to process message: " + error);
-    }
-});
-
-wss.on("closed", function close() {
-    console.log("disconnected");
-});
-
-wss.on("error", function error(err) {
-    console.log("Error: ", err);
-});
-
 server.listen(3000, () => {
     console.log('listening on *:3000');
 });

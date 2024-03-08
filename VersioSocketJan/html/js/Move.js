@@ -24,15 +24,15 @@ window.onload = function start() {
             keysPressed[data.key] = true;
             console.log("Key rebuda des del servidor" + data.key);
         }
-    })
+    })*/
     webSocket.onmessage = function(event) {
-        var data = JSON.parse(event.data);
+        var data = event.data;
         console.log("Missatge rebut des del servidor: " + data.key);
         if (data.key) {
             keysPressed[data.key] = true;
             console.log("Key rebuda des del servidor" + data.key);
         }
-    }*/
+    }
 
     // Comprovar com obtenir el missatge del socket al client i processar-lo
     function moveImage() {
@@ -41,7 +41,7 @@ window.onload = function start() {
                 webSocket.send(JSON.stringify({key: "A"}));
                 comptadorTecla++;
             }
-            
+
             position.left -= speed;
             image.style.transform = 'rotate(180deg)';
             if (position.left < -image.offsetWidth) {
