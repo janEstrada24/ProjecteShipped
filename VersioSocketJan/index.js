@@ -14,7 +14,7 @@ wss.on("connection", (ws) => {
     ws.on("message", function incoming(message) {
         try {
             const data = JSON.parse(message);
-            console.log(data);
+            console.log("Message from server: " + data.key);
 
             if (data && data.key) {
                 wss.clients.forEach(function each(client) {
@@ -39,6 +39,31 @@ wss.on("connection", (ws) => {
     ws.on("error", function error(err) {
         console.log("Error: ", err);
     });
+});
+
+wss.on("message", function incoming(message) {
+    try {
+        const data = JSON.parse(message);
+        console.log("Message from client: " + data.key);
+
+        if (data && data.key) {
+            wss.clients.forEach(function each(client) {
+                if (client !== ws && client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(data));
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Error to process message: " + error);
+    }
+});
+
+wss.on("closed", function close() {
+    console.log("disconnected");
+});
+
+wss.on("error", function error(err) {
+    console.log("Error: ", err);
 });
 
 server.listen(3000, () => {

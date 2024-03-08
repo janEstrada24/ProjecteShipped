@@ -3,7 +3,7 @@ window.onload = function start() {
     var position = { left: 0, top: 0 };
     var speed = 1; 
     
-    const webSocket = new WebSocket('ws://172.23.1.129:3000');
+    var webSocket = new WebSocket('ws://172.23.1.129:3000');
 
     var keysPressed = {
         "A": false,
@@ -11,6 +11,28 @@ window.onload = function start() {
         "W": false,
         "S": false
     };
+
+    webSocket.onopen = function(event) {
+        console.log("Connection is open ...");
+        webSocket.send(JSON.stringify({key: "A"}));
+    }
+
+    /*webSocket.addEventListener("message", function(event) {
+        var data = JSON.parse(event.data);
+        console.log("Missatge rebut des del servidor: " + data.key);
+        if (data.key) {
+            keysPressed[data.key] = true;
+            console.log("Key rebuda des del servidor" + data.key);
+        }
+    })*/
+    webSocket.onmessage = function(event) {
+        var data = JSON.parse(event.data);
+        console.log("Missatge rebut des del servidor: " + data.key);
+        if (data.key) {
+            keysPressed[data.key] = true;
+            console.log("Key rebuda des del servidor" + data.key);
+        }
+    }
 
     // Comprovar com obtenir el missatge del socket al client i processar-lo
     function moveImage() {
