@@ -14,22 +14,17 @@ wss.on("connection", (ws) => {
     ws.on("message", function incoming(message) {
         try {
             const data = JSON.parse(message);
-            console.log("Message from server: " + data.key);
 
             if (data && data.key) {
                 wss.clients.forEach(function each(client) {
-                    if (client !== ws && client.readyState === WebSocket.OPEN) {
-                        client.send(JSON.stringify(data));
-                    }
+                    console.log("Message from server: " + data.key);
+                    client.send(JSON.stringify(data));
                 });
             }
         } catch (error) {
             console.error("Error to process message: " + error);
         }
     });
-    /*ws.on("message", (message) => {
-        console.log(`Received message => ${message}`);
-    });*/
     ws.send("Hello! Message From Server!!");
 
     ws.on("closed", function close() {
