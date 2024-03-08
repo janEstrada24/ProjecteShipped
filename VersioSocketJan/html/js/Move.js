@@ -1,5 +1,6 @@
 window.onload = function start() {
     var image = document.getElementById("imatge");
+    var images = document.getElementsByClassName("imatge");
     var position = { left: 0, top: 0 };
     var speed = 1; 
     var comptadorTecla = 0;
@@ -12,6 +13,14 @@ window.onload = function start() {
         "S": false
     };
 
+    var keysNumbers = {
+        "1": false,
+        "2": false,
+        "3": false,
+        "4": false,
+        "5": false
+    };
+
     webSocket.onopen = function(event) {
         console.log("Connection is open ...");
     }
@@ -19,57 +28,92 @@ window.onload = function start() {
     webSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
         if (data.key) {
+            switch (data.key) {
+                case 'A':
+                    keysPressed["A"] = true;
+                    keysPressed["D"] = false;
+                    keysPressed["W"] = false;
+                    keysPressed["S"] = false;
+                    break;
+                case 'D':
+                    keysPressed["A"] = false;
+                    keysPressed["D"] = true;
+                    keysPressed["W"] = false;
+                    keysPressed["S"] = false;
+                    break;
+                case 'W':
+                    keysPressed["A"] = false;
+                    keysPressed["D"] = false;
+                    keysPressed["W"] = true;
+                    keysPressed["S"] = false;
+                    break;
+                case 'S':
+                    keysPressed["A"] = false;
+                    keysPressed["D"] = false;
+                    keysPressed["W"] = false;
+                    keysPressed["S"] = true;
+                    break;
+            }
+
             keysPressed[data.key] = true;
             console.log("Missatge rebut des del servidor: " + data.key);
+            image.style.transform = data.transform;
         }
     }
 
-    // Comprovar com obtenir el missatge del socket al client i processar-lo
     function moveImage() {
         if (keysPressed["A"]) {
             if (comptadorTecla == 0) {
-                webSocket.send(JSON.stringify({key: "A"}));
+                webSocket.send(JSON.stringify({
+                    key: "A",
+                    transform: 'rotate(180deg)'
+                }));
                 comptadorTecla++;
             }
 
             position.left -= speed;
-            image.style.transform = 'rotate(180deg)';
             if (position.left < -image.offsetWidth) {
                 position.left = window.innerWidth;
             }
         }
         if (keysPressed["D"]) {
             if (comptadorTecla == 0) {
-                webSocket.send(JSON.stringify({key: "D"}));
+                webSocket.send(JSON.stringify({
+                    key: "D",
+                    transform: 'rotate(0deg)'
+                }));
                 comptadorTecla++;
             }
 
             position.left += speed;
-            image.style.transform = 'rotate(0deg)';
             if (position.left > window.innerWidth) {
                 position.left = -image.offsetWidth;
             }
         }
         if (keysPressed["W"]) {
             if (comptadorTecla == 0) {
-                webSocket.send(JSON.stringify({key: "W"}));
+                webSocket.send(JSON.stringify({
+                    key: "W",
+                    transform: 'rotate(270deg)'
+                }));
                 comptadorTecla++;
             }
 
             position.top -= speed;
-            image.style.transform = 'rotate(270deg)';
             if (position.top < -image.offsetHeight) {
                 position.top = window.innerHeight;
             }
         }
         if (keysPressed["S"]) {
             if (comptadorTecla == 0) {
-                webSocket.send(JSON.stringify({key: "S"}));
+                webSocket.send(JSON.stringify({
+                    key: "S",
+                    transform: 'rotate(90deg)'
+                }));
                 comptadorTecla++;
             }
 
             position.top += speed;
-            image.style.transform = 'rotate(90deg)';
             if (position.top > window.innerHeight) {
                 position.top = -image.offsetHeight;
             }
@@ -94,6 +138,13 @@ window.onload = function start() {
                 keysPressed[key] = false;
             }
             keysPressed[event.key.toUpperCase()] = true;
+        }
+        
+        if (event.key in keysNumbers) {
+            for (var key in keysNumbers) {
+                keysNumbers[key] = false;
+            }
+            keysNumbers[event.key] = true;
         }
     });
     
