@@ -1,5 +1,5 @@
 window.onload = function () {
-  let imgs = Array.from(document.querySelectorAll('img[src="/Images/VaixellVerdIBlau.jpg"]'));
+  let imgs = Array.from(document.getElementsByClassName('Jugador1'));
   
   let speed = 1;
   let positions = Array(imgs.length).fill(0);
