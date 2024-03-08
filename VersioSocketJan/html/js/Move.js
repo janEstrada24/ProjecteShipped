@@ -12,6 +12,7 @@ window.onload = function start() {
         "S": false
     };
 
+    // Comprovar com obtenir el missatge del socket al client i processar-lo
     function moveImage() {
         if (keysPressed["A"]) {
             webSocket.send(JSON.stringify({key: "A"}));
