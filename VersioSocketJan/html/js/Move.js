@@ -2,7 +2,7 @@ window.onload = function start() {
     var image = document.getElementById("imatge");
     var position = { left: 0, top: 0 };
     var speed = 1; 
-    
+    var comptadorTecla = 0;
     var webSocket = new WebSocket('ws://172.23.1.129:3000');
 
     var keysPressed = {
@@ -24,7 +24,7 @@ window.onload = function start() {
             keysPressed[data.key] = true;
             console.log("Key rebuda des del servidor" + data.key);
         }
-    })*/
+    })
     webSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
         console.log("Missatge rebut des del servidor: " + data.key);
@@ -32,12 +32,16 @@ window.onload = function start() {
             keysPressed[data.key] = true;
             console.log("Key rebuda des del servidor" + data.key);
         }
-    }
+    }*/
 
     // Comprovar com obtenir el missatge del socket al client i processar-lo
     function moveImage() {
         if (keysPressed["A"]) {
-            webSocket.send(JSON.stringify({key: "A"}));
+            if (comptadorTecla == 0) {
+                webSocket.send(JSON.stringify({key: "A"}));
+                comptadorTecla++;
+            }
+            
             position.left -= speed;
             image.style.transform = 'rotate(180deg)';
             if (position.left < -image.offsetWidth) {
@@ -45,7 +49,11 @@ window.onload = function start() {
             }
         }
         if (keysPressed["D"]) {
-            webSocket.send(JSON.stringify({key: "D"}));
+            if (comptadorTecla == 0) {
+                webSocket.send(JSON.stringify({key: "D"}));
+                comptadorTecla++;
+            }
+
             position.left += speed;
             image.style.transform = 'rotate(0deg)';
             if (position.left > window.innerWidth) {
@@ -53,7 +61,11 @@ window.onload = function start() {
             }
         }
         if (keysPressed["W"]) {
-            webSocket.send(JSON.stringify({key: "W"}));
+            if (comptadorTecla == 0) {
+                webSocket.send(JSON.stringify({key: "W"}));
+                comptadorTecla++;
+            }
+
             position.top -= speed;
             image.style.transform = 'rotate(270deg)';
             if (position.top < -image.offsetHeight) {
@@ -61,7 +73,11 @@ window.onload = function start() {
             }
         }
         if (keysPressed["S"]) {
-            webSocket.send(JSON.stringify({key: "S"}));
+            if (comptadorTecla == 0) {
+                webSocket.send(JSON.stringify({key: "S"}));
+                comptadorTecla++;
+            }
+
             position.top += speed;
             image.style.transform = 'rotate(90deg)';
             if (position.top > window.innerHeight) {
@@ -89,6 +105,10 @@ window.onload = function start() {
             }
             keysPressed[event.key.toUpperCase()] = true;
         }
+    });
+    
+    window.addEventListener("keyup", function(event) {
+        comptadorTecla = 0;
     });
 
     moveImage();
