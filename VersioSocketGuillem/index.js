@@ -1,28 +1,41 @@
-const express = require("express");
-const path = require("path");
-const http = require("http");
-const socketIO = require("socket.io");
-const cors = require("cors"); // Requiere cors
-
+const express = require('express');
 const app = express();
+const http = require('http');
 const server = http.createServer(app);
-const io = socketIO(server);
+const path = require('path');
+const WebSocket = require('ws');
+const cors = require('cors');
 
 app.use(cors());
 
 // Serve static files from the Html directory
 app.use(express.static(path.join(__dirname, "Html")));
+const wss = new WebSocket.Server({ server });
 
-io.on("connection", (socket) => {
+wss.on("connection", (ws) => {
   console.log("A user connected");
 
-  socket.on('keyPress', function(key) {
-    console.log(key);
-    socket.broadcast.emit('keyPress', key);
+  ws.on("message", function incoming(message) {
+    try {
+        const data = JSON.parse(message);
+        console.log(data);
+
+        if (data && data.key) {
+            wss.clients.forEach(function each(client) {
+                if (client !== ws && client.readyState === WebSocket.OPEN) {
+                    client.send(JSON.stringify(data));
+                    console.log("Send message to client: " + data.key);
+                }
+            });
+        }
+    } catch (error) {
+        console.error("Error to process message: " + error);
+    }
   });
 
-  socket.on("disconnect", () => {
+  ws.on("close", () => {
     console.log("A user disconnected");
   });
 });
+
 server.listen(3000, () => console.log("Listening on port 3000"));
