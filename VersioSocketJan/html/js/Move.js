@@ -1,9 +1,17 @@
 window.onload = function start() {
     var image = null;
-    var position = { left: 0, top: 0 };
+    //var position = { left: 0, top: 0 };
+    var positions = [];
+
+    for (var i = 0; i < document.getElementsByClassName("imatge").length; i++) {
+        positions.push({ left: 0, top: 0 });
+    }
+
     var speed = 1; 
     var comptadorTecla = 0;
     var webSocket = new WebSocket('ws://172.23.1.129:3000');
+
+    var selectedImage = null;
 
     var keysPressed = {
         "A": false,
@@ -40,6 +48,8 @@ window.onload = function start() {
 
     function moveImage() {
         if (image != null) {
+            var position = positions[selectedImage];
+
             if (keysPressed["A"]) {
                 if (comptadorTecla == 0) {
                     webSocket.send(JSON.stringify({
@@ -121,7 +131,8 @@ window.onload = function start() {
         
         if (event.key in keysNumbers) {
             image = document.getElementsByClassName("imatge")[event.key - 1];
-            console.log("imatge seleccionada " + (parseInt(event.key) - 1));
+            selectedImage = (parseInt(event.key) - 1);
+            console.log("imatge seleccionada " + selectedImage);
         }
     });
     
