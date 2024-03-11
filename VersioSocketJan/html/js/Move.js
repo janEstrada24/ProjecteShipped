@@ -60,58 +60,6 @@ window.onload = function start() {
         }
     }
 
-    function moveImages() {
-        images = document.getElementsByClassName("imatge");
-        for (var i = 0; i < images.length; i++) {
-            for (var key in keysShips[i]) {
-                if (keysShips[i][key]) {
-                    switch (key) {
-                        case "A":
-                            positions[i].rotation = "rotate(180deg)";
-                            positions[i].left -= speed;
-                            if (positions[i].left < -images[i].offsetWidth) {
-                                positions[i].left = window.innerWidth;
-                            }
-                            break;
-                        case "D":
-                            positions[i].rotation = "rotate(0deg)";
-                            positions[i].left += speed;
-                            if (positions[i].left > window.innerWidth) {
-                                positions[i].left = -images[i].offsetWidth;
-                            }
-                            break;
-                        case "W":
-                            positions[i].rotation = "rotate(270deg)";
-                            positions[i].top -= speed;
-                            if (positions[i].top < -images[i].offsetHeight) {
-                                positions[i].top = window.innerHeight;
-                            }
-                            break;
-                        case "S":
-                            positions[i].rotation = "rotate(90deg)";
-                            positions[i].top += speed;
-                            if (positions[i].top > window.innerHeight) {
-                                positions[i].top = -images[i].offsetHeight;
-                            }
-                            break;
-                    }
-
-                    if (comptadorTecla == 0) {
-                        webSocket.send(JSON.stringify({
-                            key: key,
-                            transform: positions[i].rotation
-                        }));
-                        comptadorTecla++;
-                    }
-
-                }
-            }
-            position = positions[i];
-            position.left = images[i].offsetLeft;
-            position.top = images[i].offsetTop;
-        }
-    }
-
     function moveImage() {
         if (image != null) {
 
