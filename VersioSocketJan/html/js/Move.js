@@ -3,12 +3,12 @@ window.onload = function start() {
     var position = null;
     var positions = [];
     var keysShips = [];
-
+    var images = document.getElementsByClassName("imatge");
     var worker = new Worker("js/worker.js");
     worker.postMessage('Happy Birthday');
 
     for (var i = 0; i < document.getElementsByClassName("imatge").length; i++) {
-        positions.push({ left: 0, top: 0 });
+        positions.push({ left: 0, top: 0, rotation: "" });
         keysShips.push({
             "A": false,
             "D": false,
@@ -60,8 +60,112 @@ window.onload = function start() {
         }
     }
 
+    function moveImages() {
+        images = document.getElementsByClassName("imatge");
+        for (var i = 0; i < images.length; i++) {
+            for (var key in keysShips[i]) {
+                if (keysShips[i][key]) {
+                    switch (key) {
+                        case "A":
+                            positions[i].rotation = "rotate(180deg)";
+                            positions[i].left -= speed;
+                            if (positions[i].left < -images[i].offsetWidth) {
+                                positions[i].left = window.innerWidth;
+                            }
+                            break;
+                        case "D":
+                            positions[i].rotation = "rotate(0deg)";
+                            positions[i].left += speed;
+                            if (positions[i].left > window.innerWidth) {
+                                positions[i].left = -images[i].offsetWidth;
+                            }
+                            break;
+                        case "W":
+                            positions[i].rotation = "rotate(270deg)";
+                            positions[i].top -= speed;
+                            if (positions[i].top < -images[i].offsetHeight) {
+                                positions[i].top = window.innerHeight;
+                            }
+                            break;
+                        case "S":
+                            positions[i].rotation = "rotate(90deg)";
+                            positions[i].top += speed;
+                            if (positions[i].top > window.innerHeight) {
+                                positions[i].top = -images[i].offsetHeight;
+                            }
+                            break;
+                    }
+
+                    if (comptadorTecla == 0) {
+                        webSocket.send(JSON.stringify({
+                            key: key,
+                            transform: positions[i].rotation
+                        }));
+                        comptadorTecla++;
+                    }
+
+                }
+            }
+            position = positions[i];
+            position.left = images[i].offsetLeft;
+            position.top = images[i].offsetTop;
+        }
+    }
+
     function moveImage() {
         if (image != null) {
+
+            images = document.getElementsByClassName("imatge");
+
+            for (var i = 0; i < images.length; i++) {
+                if (images[i] != image) {
+                    for (var key in keysShips[i]) {
+                        if (keysShips[i][key] == true) {
+                            switch (key) {
+                                case "A":
+                                    positions[i].rotation = "rotate(180deg)";
+                                    positions[i].left -= speed;
+                                    if (positions[i].left < -images[i].offsetWidth) {
+                                        positions[i].left = window.innerWidth;
+                                    }
+                                    break;
+                                case "D":
+                                    positions[i].rotation = "rotate(0deg)";
+                                    positions[i].left += speed;
+                                    if (positions[i].left > window.innerWidth) {
+                                        positions[i].left = -images[i].offsetWidth;
+                                    }
+                                    break;
+                                case "W":
+                                    positions[i].rotation = "rotate(270deg)";
+                                    positions[i].top -= speed;
+                                    if (positions[i].top < -images[i].offsetHeight) {
+                                        positions[i].top = window.innerHeight;
+                                    }
+                                    break;
+                                case "S":
+                                    positions[i].rotation = "rotate(90deg)";
+                                    positions[i].top += speed;
+                                    if (positions[i].top > window.innerHeight) {
+                                        positions[i].top = -images[i].offsetHeight;
+                                    }
+                                    break;
+                            }
+                            images[i].style.left = positions[i].left + "px";
+                            images[i].style.top = positions[i].top + "px";
+                    
+                            if (positions[i] >= window.innerWidth) {
+                                positions[i] = -images[i].width;
+                            }
+                            if (positions[i] >= window.innerHeight) {
+                                positions[i] = -images[i].height;
+                            }
+                            images[i].style.transform = positions[i].rotation;
+                        }
+                    }
+                }
+            }
+
             position = positions[selectedImage];
 
             //if (keysPressed["A"]) {
