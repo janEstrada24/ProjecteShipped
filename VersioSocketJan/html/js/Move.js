@@ -1,6 +1,6 @@
 window.onload = function start() {
     var image = null;
-    //var position = { left: 0, top: 0 };
+    var position = null;
     var positions = [];
 
     for (var i = 0; i < document.getElementsByClassName("imatge").length; i++) {
@@ -9,7 +9,7 @@ window.onload = function start() {
 
     var speed = 1; 
     var comptadorTecla = 0;
-    var webSocket = new WebSocket('ws://172.23.1.129:3000');
+    var webSocket = new WebSocket('ws://localhost:3000');
 
     var selectedImage = null;
 
@@ -48,7 +48,7 @@ window.onload = function start() {
 
     function moveImage() {
         if (image != null) {
-            var position = positions[selectedImage];
+            position = positions[selectedImage];
 
             if (keysPressed["A"]) {
                 if (comptadorTecla == 0) {

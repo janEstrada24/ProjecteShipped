@@ -1,26 +1,17 @@
-html,body { height: 100%; margin: 0px; padding: 0px; }
-
+/*
 .container {
-    position: relative;
-    overflow: hidden;
     width: 100%; 
     height: 100%;
+}*/
+
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
-.moving-image {
+.imatge {
     position: absolute;
-    animation: moveRight 5s linear infinite; /* Controla la velocidad ajustando el tiempo */
-}
-
-@keyframes moveRight {
-    from {
-        left: 0;
-    }
-    to {
-        left: 100%; /* Mueve la imagen completamente hacia la derecha */
-    }
-}
-
-#imatge {
-    position: absolute;
+    width: 4%;
 }
