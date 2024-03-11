@@ -2,14 +2,24 @@ window.onload = function start() {
     var image = null;
     var position = null;
     var positions = [];
+    var keysShips = [];
+
+    var worker = new Worker("js/worker.js");
+    worker.postMessage('Happy Birthday');
 
     for (var i = 0; i < document.getElementsByClassName("imatge").length; i++) {
         positions.push({ left: 0, top: 0 });
+        keysShips.push({
+            "A": false,
+            "D": false,
+            "W": false,
+            "S": false
+        });
     }
 
     var speed = 1; 
     var comptadorTecla = 0;
-    var webSocket = new WebSocket('ws://localhost:3000');
+    var webSocket = new WebSocket('ws://172.23.1.129:3000');
 
     var selectedImage = null;
 
@@ -36,11 +46,15 @@ window.onload = function start() {
         var data = JSON.parse(event.data);
         if (data.key) {
 
-            for (var key in keysPressed) {
-                keysPressed[key] = false;
+            for (var key in keysShips[selectedImage]) {
+                keysShips[selectedImage][key] = false;
             }
 
-            keysPressed[data.key] = true;
+            /*for (var key in keysPressed) {
+                keysPressed[key] = false;
+            }*/
+
+            keysShips[selectedImage][data.key] = true;
             console.log("Missatge rebut des del servidor: " + data.key);
             image.style.transform = data.transform;
         }
@@ -50,7 +64,8 @@ window.onload = function start() {
         if (image != null) {
             position = positions[selectedImage];
 
-            if (keysPressed["A"]) {
+            //if (keysPressed["A"]) {
+            if (keysShips[selectedImage]["A"]) {
                 if (comptadorTecla == 0) {
                     webSocket.send(JSON.stringify({
                         key: "A",
@@ -64,7 +79,8 @@ window.onload = function start() {
                     position.left = window.innerWidth;
                 }
             }
-            if (keysPressed["D"]) {
+            //if (keysPressed["D"]) {
+            if (keysShips[selectedImage]["D"]) {
                 if (comptadorTecla == 0) {
                     webSocket.send(JSON.stringify({
                         key: "D",
@@ -78,7 +94,8 @@ window.onload = function start() {
                     position.left = -image.offsetWidth;
                 }
             }
-            if (keysPressed["W"]) {
+            //if (keysPressed["W"]) {
+            if (keysShips[selectedImage]["W"]) {
                 if (comptadorTecla == 0) {
                     webSocket.send(JSON.stringify({
                         key: "W",
@@ -92,7 +109,8 @@ window.onload = function start() {
                     position.top = window.innerHeight;
                 }
             }
-            if (keysPressed["S"]) {
+            //if (keysPressed["S"]) {
+            if (keysShips[selectedImage]["S"]) {
                 if (comptadorTecla == 0) {
                     webSocket.send(JSON.stringify({
                         key: "S",
@@ -122,13 +140,21 @@ window.onload = function start() {
     }
 
     window.addEventListener("keydown", function(event) {
-        if (event.key.toUpperCase() in keysPressed) {
+        /*if (event.key.toUpperCase() in keysPressed) {
             for (var key in keysPressed) {
                 keysPressed[key] = false;
             }
             keysPressed[event.key.toUpperCase()] = true;
+        }*/
+
+        if (event.key.toUpperCase() in keysPressed 
+            && selectedImage != null) {
+            for (var key in keysShips[selectedImage]) {
+                keysShips[selectedImage][key] = false;
+            }
+            keysShips[selectedImage][event.key.toUpperCase()] = true;
         }
-        
+
         if (event.key in keysNumbers) {
             image = document.getElementsByClassName("imatge")[event.key - 1];
             selectedImage = (parseInt(event.key) - 1);
@@ -137,6 +163,10 @@ window.onload = function start() {
     });
     
     window.addEventListener("keyup", function(event) {
+        /*if (event.key.toUpperCase() in keysPressed
+            && selectedImage != null) {
+            keysShips[selectedImage][event.key.toUpperCase()] = false;
+        }*/
         comptadorTecla = 0;
     });
 
