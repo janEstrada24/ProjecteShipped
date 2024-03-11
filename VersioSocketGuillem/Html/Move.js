@@ -44,14 +44,59 @@ window.onload = function () {
           }
           img.style.top = currentTop + "px";
         }
-      } else {
-        // Las otras imágenes se mueven en una dirección predeterminada, por ejemplo, a la derecha
-        currentLeft += speed;
-        if (currentLeft > window.innerWidth) {
-          currentLeft = -imgWidth;
+      } 
+      // Cuando la imagen termine de ser activa, guarda la dirección hacia la que va la imagen
+      if (index === activeImg) {
+        if (moveLeft) {
+          positions[index] = "left";
+        } else if (moveBottom) {
+          positions[index] = "bottom";
+        } else if (moveRight) {
+          positions[index] = "right";
+        } else if (moveTop) {
+          positions[index] = "top";
         }
-        img.style.left = currentLeft + "px";
       }
+     
+      
+      // Si la imagen no es activa, mueve la imagen en la dirección guardada de cada imagen, si no hay dirección, se mueve hacia la izquierda.
+      if (index !== activeImg) {
+        let direction = positions[index];
+        if (direction === "left") {
+          currentLeft += speed;
+          if (currentLeft > window.innerWidth) {
+        currentLeft = -imgWidth;
+          }
+          img.style.left = currentLeft + "px";
+        } else if (direction === "bottom") {
+          currentTop -= speed;
+          if (currentTop < -imgHeight) {
+        currentTop = window.innerHeight;
+          }
+          img.style.top = currentTop + "px";
+        } else if (direction === "right") {
+          currentLeft -= speed;
+          if (currentLeft < -imgWidth) {
+        currentLeft = window.innerWidth;
+          }
+          img.style.left = currentLeft + "px";
+        } else if (direction === "top") {
+          currentTop += speed;
+          if (currentTop > window.innerHeight) {
+        currentTop = -imgHeight;
+          }
+          img.style.top = currentTop + "px";
+        } else {
+          // Si no hay dirección guardada, mueve hacia la izquierda
+          currentLeft += speed;
+          if (currentLeft > window.innerWidth) {
+        currentLeft = -imgWidth;
+          }
+          img.style.left = currentLeft + "px";
+        }
+      }
+   
+      
     });
   
     // Llama a requestAnimationFrame fuera del bucle forEach
