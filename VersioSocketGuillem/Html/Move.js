@@ -128,32 +128,7 @@ window.onload = function () {
     // Llama a requestAnimationFrame fuera del bucle forEach
     requestAnimationFrame(animate);
   }
-  function moveImage() {
-  if (index === activeImg) {
-    if (moveLeft) {
-      currentLeft -= speed;
-      if (currentLeft < -imgWidth) {
-        currentLeft = window.innerWidth;
-      }
-    } else if (moveBottom) {
-      currentTop += speed;
-      if (currentTop > window.innerHeight) {
-        currentTop = -imgHeight;
-      }
-    } else if (moveRight) {
-      currentLeft += speed;
-      if (currentLeft > window.innerWidth) {
-        currentLeft = -imgWidth;
-      }
-    } else if (moveTop) {
-      currentTop -= speed;
-      if (currentTop < -imgHeight) {
-        currentTop = window.innerHeight;
-      }
-    }
-    img.style.left = currentLeft + "px";
-    img.style.top = currentTop + "px";
-  }
+
 
   // Solicita al navegador que llame a moveImage antes del próximo repintado
   requestAnimationFrame(moveImage);
