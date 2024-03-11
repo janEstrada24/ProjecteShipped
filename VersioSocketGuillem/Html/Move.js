@@ -1,14 +1,14 @@
 window.onload = function () {
-  let imgs = Array.from(document.getElementsByClassName('Jugador1'));
-  
+  let imgs = Array.from(document.getElementsByClassName("Jugador1"));
+
   let speed = 1;
   let positions = Array(imgs.length).fill(0);
   let moveLeft = true;
   let moveTop = false;
-  let moveRight = false; 
+  let moveRight = false;
   let moveBottom = false;
-  let activeImg = 0
-  const webSocket = new WebSocket('ws://172.23.2.211:3000');
+  let activeImg = 0;
+  const webSocket = new WebSocket("ws://172.23.2.211:3000");
 
   function animate() {
     imgs.forEach((img, index) => {
@@ -16,7 +16,7 @@ window.onload = function () {
       let imgHeight = img.offsetHeight;
       let currentLeft = img.offsetLeft;
       let currentTop = img.offsetTop;
-  
+
       if (index === activeImg) {
         // La imagen activa se mueve según la dirección especificada
         if (moveLeft) {
@@ -44,7 +44,9 @@ window.onload = function () {
           }
           img.style.top = currentTop + "px";
         }
-      } 
+      }
+       
+
       // Cuando la imagen termine de ser activa, guarda la dirección hacia la que va la imagen
       if (index === activeImg) {
         if (moveLeft) {
@@ -56,52 +58,106 @@ window.onload = function () {
         } else if (moveTop) {
           positions[index] = "top";
         }
+
+      } 
+      if (index === activeImg) {
+        if (moveLeft) {
+          currentLeft -= speed;
+          if (currentLeft < -imgWidth) {
+            currentLeft = window.innerWidth;
+          }
+        } else if (moveBottom) {
+          currentTop += speed;
+          if (currentTop > window.innerHeight) {
+            currentTop = -imgHeight;
+          }
+        } else if (moveRight) {
+          currentLeft += speed;
+          if (currentLeft > window.innerWidth) {
+            currentLeft = -imgWidth;
+          }
+        } else if (moveTop) {
+          currentTop -= speed;
+          if (currentTop < -imgHeight) {
+            currentTop = window.innerHeight;
+          }
+        }
+        img.style.left = currentLeft + "px";
+        img.style.top = currentTop + "px";
       }
-     
-      
       // Si la imagen no es activa, mueve la imagen en la dirección guardada de cada imagen, si no hay dirección, se mueve hacia la izquierda.
       if (index !== activeImg) {
         let direction = positions[index];
         if (direction === "left") {
           currentLeft += speed;
           if (currentLeft > window.innerWidth) {
-        currentLeft = -imgWidth;
+            currentLeft = -imgWidth;
           }
           img.style.left = currentLeft + "px";
         } else if (direction === "bottom") {
           currentTop -= speed;
           if (currentTop < -imgHeight) {
-        currentTop = window.innerHeight;
+            currentTop = window.innerHeight;
           }
           img.style.top = currentTop + "px";
         } else if (direction === "right") {
           currentLeft -= speed;
           if (currentLeft < -imgWidth) {
-        currentLeft = window.innerWidth;
+            currentLeft = window.innerWidth;
           }
           img.style.left = currentLeft + "px";
         } else if (direction === "top") {
           currentTop += speed;
           if (currentTop > window.innerHeight) {
-        currentTop = -imgHeight;
+            currentTop = -imgHeight;
           }
           img.style.top = currentTop + "px";
         } else {
           // Si no hay dirección guardada, mueve hacia la izquierda
           currentLeft += speed;
           if (currentLeft > window.innerWidth) {
-        currentLeft = -imgWidth;
+            currentLeft = -imgWidth;
           }
           img.style.left = currentLeft + "px";
         }
       }
-   
-      
+    
+
     });
-  
+
     // Llama a requestAnimationFrame fuera del bucle forEach
     requestAnimationFrame(animate);
   }
+  function moveImage() {
+  if (index === activeImg) {
+    if (moveLeft) {
+      currentLeft -= speed;
+      if (currentLeft < -imgWidth) {
+        currentLeft = window.innerWidth;
+      }
+    } else if (moveBottom) {
+      currentTop += speed;
+      if (currentTop > window.innerHeight) {
+        currentTop = -imgHeight;
+      }
+    } else if (moveRight) {
+      currentLeft += speed;
+      if (currentLeft > window.innerWidth) {
+        currentLeft = -imgWidth;
+      }
+    } else if (moveTop) {
+      currentTop -= speed;
+      if (currentTop < -imgHeight) {
+        currentTop = window.innerHeight;
+      }
+    }
+    img.style.left = currentLeft + "px";
+    img.style.top = currentTop + "px";
+  }
+
+  // Solicita al navegador que llame a moveImage antes del próximo repintado
+  requestAnimationFrame(moveImage);
+}
 
   animate();
 
@@ -112,7 +168,7 @@ window.onload = function () {
         activeImg = imgs.length - 1;
       }
     }
-  
+
     if (event.key === "s" || event.key === "S") {
       webSocket.send(JSON.stringify({ key: "S" }));
       moveLeft = false;
@@ -141,7 +197,7 @@ window.onload = function () {
         imgs[activeImg].style.transform = "rotate(180deg)";
       }
     } else if (event.key === "w" || event.key === "W") {
-       webSocket.send(JSON.stringify({ key: "W" }));
+      webSocket.send(JSON.stringify({ key: "W" }));
       moveLeft = false;
       moveTop = false;
       moveRight = false;
@@ -150,12 +206,11 @@ window.onload = function () {
         imgs[activeImg].style.transform = "rotate(270deg)";
       }
     }
-  
   });
-  webSocket.onmessage = function(event) {
+  webSocket.onmessage = function (event) {
     const message = JSON.parse(event.data);
     const direction = message.key;
-  
+
     // Mover la imagen en la dirección recibida
     if (direction === "S") {
       moveLeft = false;
