@@ -2,9 +2,8 @@ window.onload = function () {
   let imgs = Array.from(document.getElementsByClassName("Jugador1"));
 
   let speed = 1;
-  let positions = Array(imgs.length).fill(0);
   let activeImg = 0;
-  let moveDirection = "left";
+  let degree = 0;
   const webSocket = new WebSocket("ws://172.23.2.211:3000");
 
   function animate() {
@@ -15,80 +14,27 @@ window.onload = function () {
       let currentTop = img.offsetTop;
 
       if (index === activeImg) {
-        switch (moveDirection) {
-          case "left":
-            currentLeft += speed;
-            if (currentLeft > window.innerWidth) {
-              currentLeft = -imgWidth;
-            }
-            img.style.left = currentLeft + "px";
-            break;
-          case "bottom":
-            currentTop -= speed;
-            if (currentTop < -imgHeight) {
-              currentTop = window.innerHeight;
-            }
-            img.style.top = currentTop + "px";
-            break;
-          case "right":
-            currentLeft -= speed;
-            if (currentLeft < -imgWidth) {
-              currentLeft = window.innerWidth;
-            }
-            img.style.left = currentLeft + "px";
-            break;
-          case "top":
-            currentTop += speed;
-            if (currentTop > window.innerHeight) {
-              currentTop = -imgHeight;
-            }
-            img.style.top = currentTop + "px";
-            break;
-        }
-      }
+        let radian = degree * (Math.PI / 180);
+        currentLeft += speed * Math.cos(radian);
+        currentTop += speed * Math.sin(radian);
 
-      // Cuando la imagen termine de ser activa, guarda la dirección hacia la que va la imagen
-      if (index === activeImg) {
-        positions[index] = moveDirection;
-      }
-
-      // Si la imagen no es activa, mueve la imagen en la dirección guardada de cada imagen, si no hay dirección, se mueve hacia la izquierda.
-      if (index !== activeImg) {
-        let direction = positions[index] || "left";
-        switch (direction) {
-          case "left":
-            currentLeft += speed;
-            if (currentLeft > window.innerWidth) {
-              currentLeft = -imgWidth;
-            }
-            img.style.left = currentLeft + "px";
-            break;
-          case "bottom":
-            currentTop -= speed;
-            if (currentTop < -imgHeight) {
-              currentTop = window.innerHeight;
-            }
-            img.style.top = currentTop + "px";
-            break;
-          case "right":
-            currentLeft -= speed;
-            if (currentLeft < -imgWidth) {
-              currentLeft = window.innerWidth;
-            }
-            img.style.left = currentLeft + "px";
-            break;
-          case "top":
-            currentTop += speed;
-            if (currentTop > window.innerHeight) {
-              currentTop = -imgHeight;
-            }
-            img.style.top = currentTop + "px";
-            break;
+        if (currentLeft > window.innerWidth) {
+          currentLeft = -imgWidth;
+        } else if (currentLeft < -imgWidth) {
+          currentLeft = window.innerWidth;
         }
+
+        if (currentTop > window.innerHeight) {
+          currentTop = -imgHeight;
+        } else if (currentTop < -imgHeight) {
+          currentTop = window.innerHeight;
+        }
+
+        img.style.left = currentLeft + "px";
+        img.style.top = currentTop + "px";
       }
     });
 
-    // Llama a requestAnimationFrame fuera del bucle forEach
     requestAnimationFrame(animate);
   }
 
@@ -103,50 +49,32 @@ window.onload = function () {
     }
 
     switch (event.key.toLowerCase()) {
-      case "s":
-        webSocket.send(JSON.stringify({ key: "S" }));
-        moveDirection = "top";
+      case "a":
+        webSocket.send(JSON.stringify({ key: "A" }));
+        degree -= 5;
         break;
       case "d":
         webSocket.send(JSON.stringify({ key: "D" }));
-        moveDirection = "left";
-        break;
-      case "a":
-        webSocket.send(JSON.stringify({ key: "A" }));
-        moveDirection = "right";
-        break;
-      case "w":
-        webSocket.send(JSON.stringify({ key: "W" }));
-        moveDirection = "bottom";
+        degree += 5;
         break;
     }
 
-    for (let i = 0; i < imgs.length; i++) {
-      imgs[activeImg].style.transform = `rotate(${["left", "top", "right", "bottom"].indexOf(moveDirection) * 90}deg)`;
-    }
+    imgs[activeImg].style.transform = `rotate(${degree}deg)`;
   });
 
   webSocket.onmessage = function (event) {
     const message = JSON.parse(event.data);
-    const direction = message.key;
+    const key = message.key;
 
-    switch (direction) {
-      case "S":
-        moveDirection = "top";
-        break;
-      case "W":
-        moveDirection = "bottom";
-        break;
+    switch (key) {
       case "A":
-        moveDirection = "right";
+        degree -= 5;
         break;
       case "D":
-        moveDirection = "left";
+        degree += 5;
         break;
     }
 
-    for (let i = 0; i < imgs.length; i++) {
-      imgs[activeImg].style.transform = `rotate(${["left", "bottom", "right", "top"].indexOf(moveDirection) * 90}deg)`;
-    }
+    imgs[activeImg].style.transform = `rotate(${degree}deg)`;
   };
 };
