@@ -9,13 +9,23 @@ window.onload = function () {
     const webSocket = new WebSocket("ws://172.23.1.129:3000");
     
     function addBarrils() {
+        const windowWidth = window.innerWidth * 0.5;
+        const windowHeight = window.innerHeight;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        var randomX;
+        var randomY;
+
         for (let i = 0; i < barrils; i++) {
             let img = document.createElement("img");
             img.src = "/Images/barril.png";
             img.classList.add("barril");
             img.style.position = "absolute";
-            img.style.left = Math.random() * window.innerWidth + "px";
-            img.style.top = Math.random() * window.innerHeight + "px";
+
+            randomX = centerX - (windowWidth / 2) + (Math.random() * windowWidth);
+            randomY = centerY - (windowHeight / 2) +  (Math.random() * windowHeight);
+            img.style.left = randomX + "px";
+            img.style.top = randomY + "px";
             document.body.appendChild(img);
         }
     }
