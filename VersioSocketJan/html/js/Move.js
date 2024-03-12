@@ -29,7 +29,7 @@ window.onload = function () {
         for (let i = 0; i < quantityBarrils; i++) {
             let barril = document.createElement("img");
             barril.src = "/Images/barril.png";
-            barril.classList.add("barril");
+            barril.classList.add("barrils");
             barril.style.position = "absolute";
 
             randomX = centerX - (windowWidth / 2) + (Math.random() * windowWidth);
@@ -54,14 +54,14 @@ window.onload = function () {
             for (let barril of barrils) {
                 barrilRect = barril.getBoundingClientRect();
 
-                if(vaixellRect.right < barrilRect.left ||
-                    vaixellRect.left > barrilRect.right ||
-                    vaixellRect.bottom < barrilRect.top ||
-                    vaixellRect.top > barrilRect.bottom) {
+                if(vaixellRect.x < barrilRect.x + barrilRect.width &&
+                    vaixellRect.x + vaixellRect.width > barrilRect.x &&
+                    vaixellRect.y < barrilRect.y + barrilRect.height &&
+                    vaixellRect.y + vaixellRect.height > barrilRect.y) {
                     
-                    barril[i].style.display = "none";
-                    barrils[i].remove();
-                    barrils.splice(i, 1);
+                    barril.remove();
+                    barrils.splice(barrils.indexOf(barril), 1);
+                    console.log("Barril eliminat");
                 }
             };
         }
