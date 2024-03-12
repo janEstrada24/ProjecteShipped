@@ -44,7 +44,11 @@ window.onload = function () {
              currentTop < meteorTop + meteorHeight &&
              currentTop + imgHeight > meteorTop;
     });
-
+    Meteorit.forEach((meteorit) => {
+      meteorit.updated = false;
+      
+    });
+  
     if (hasCollided) {
       img.style.display = 'none'; // Ocultar la imagen
       return false; // Eliminar la imagen de la lista
@@ -58,8 +62,24 @@ window.onload = function () {
 
     requestAnimationFrame(animate);
   }
-
+  update();
   animate();
+  function update() {
+  
+      Meteorit.forEach((meteorit) => {
+        if (!meteorit.updated) {
+          let randomLeft = Math.random() * window.innerWidth;
+          let randomTop = Math.random() * window.innerHeight;
+          let randomWidth = 2 + Math.random() * 2; // genera un número aleatorio entre 2 y 4
+    
+          meteorit.style.left = `${randomLeft}px`;
+          meteorit.style.top = `${randomTop}px`;
+          meteorit.style.width = `${randomWidth}%`; // establece el ancho del meteorito
+    
+          meteorit.updated = true;
+        }
+      });
+    }
 
   window.addEventListener("keydown", function (event) {
     if (event.key >= "1" && event.key <= "5") {
