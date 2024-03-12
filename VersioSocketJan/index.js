@@ -15,9 +15,9 @@ wss.on("connection", (ws) => {
         try {
             const data = JSON.parse(message);
 
-            if (data && data.key) {
+            if (data && data.direction) {
                 wss.clients.forEach(function each(client) {
-                    console.log("Message from server: " + data.key);
+                    console.log("Message from server: " + data.direction);
                     client.send(JSON.stringify(data));
                 });
             }
