@@ -3,7 +3,7 @@ window.onload = function () {
 
   let speed = 1;
   let activeImg = 0;
-  let degree = 0;
+  let degrees = new Array(imgs.length).fill(0);
   const webSocket = new WebSocket("ws://172.23.2.211:3000");
 
   function animate() {
@@ -13,26 +13,24 @@ window.onload = function () {
       let currentLeft = img.offsetLeft;
       let currentTop = img.offsetTop;
 
-      if (index === activeImg) {
-        let radian = degree * (Math.PI / 180);
-        currentLeft += speed * Math.cos(radian);
-        currentTop += speed * Math.sin(radian);
+      let radian = degrees[index] * (Math.PI / 180);
+      currentLeft += speed * Math.cos(radian);
+      currentTop += speed * Math.sin(radian);
 
-        if (currentLeft > window.innerWidth) {
-          currentLeft = -imgWidth;
-        } else if (currentLeft < -imgWidth) {
-          currentLeft = window.innerWidth;
-        }
-
-        if (currentTop > window.innerHeight) {
-          currentTop = -imgHeight;
-        } else if (currentTop < -imgHeight) {
-          currentTop = window.innerHeight;
-        }
-
-        img.style.left = currentLeft + "px";
-        img.style.top = currentTop + "px";
+      if (currentLeft > window.innerWidth) {
+        currentLeft = -imgWidth;
+      } else if (currentLeft < -imgWidth) {
+        currentLeft = window.innerWidth;
       }
+
+      if (currentTop > window.innerHeight) {
+        currentTop = -imgHeight;
+      } else if (currentTop < -imgHeight) {
+        currentTop = window.innerHeight;
+      }
+
+      img.style.left = currentLeft + "px";
+      img.style.top = currentTop + "px";
     });
 
     requestAnimationFrame(animate);
@@ -51,15 +49,15 @@ window.onload = function () {
     switch (event.key.toLowerCase()) {
       case "a":
         webSocket.send(JSON.stringify({ key: "A" }));
-        degree -= 5;
+        degrees[activeImg] -= 5;
         break;
       case "d":
         webSocket.send(JSON.stringify({ key: "D" }));
-        degree += 5;
+        degrees[activeImg] += 5;
         break;
     }
 
-    imgs[activeImg].style.transform = `rotate(${degree}deg)`;
+    imgs[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
   });
 
   webSocket.onmessage = function (event) {
@@ -68,13 +66,13 @@ window.onload = function () {
 
     switch (key) {
       case "A":
-        degree -= 5;
+        degrees[activeImg] -= 5;
         break;
       case "D":
-        degree += 5;
+        degrees[activeImg] += 5;
         break;
     }
 
-    imgs[activeImg].style.transform = `rotate(${degree}deg)`;
+    imgs[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
   };
 };
