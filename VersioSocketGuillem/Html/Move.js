@@ -1,5 +1,6 @@
 window.onload = function () {
   let imgs = Array.from(document.getElementsByClassName("Jugador1"));
+  let Meteorit = Array.from(document.getElementsByClassName("Meteorit"));
 
   let speed = 1;
   let activeImg = 0;
@@ -31,7 +32,29 @@ window.onload = function () {
 
       img.style.left = currentLeft + "px";
       img.style.top = currentTop + "px";
+       // Verificar la colisión con cada meteorito
+    let hasCollided = Meteorit.some(meteor => {
+      let meteorLeft = meteor.offsetLeft;
+      let meteorTop = meteor.offsetTop;
+      let meteorWidth = meteor.offsetWidth;
+      let meteorHeight = meteor.offsetHeight;
+
+      return currentLeft < meteorLeft + meteorWidth &&
+             currentLeft + imgWidth > meteorLeft &&
+             currentTop < meteorTop + meteorHeight &&
+             currentTop + imgHeight > meteorTop;
     });
+
+    if (hasCollided) {
+      img.style.display = 'none'; // Ocultar la imagen
+      return false; // Eliminar la imagen de la lista
+    }
+
+    return true; // Mantener la imagen en la lista
+  });
+   
+    
+    
 
     requestAnimationFrame(animate);
   }
