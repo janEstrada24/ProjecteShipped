@@ -1,5 +1,5 @@
 window.onload = function () {
-    let vaixells = Array.from(document.getElementsByClassName("vaixell"));
+    let vaixells = Array.from(document.getElementsByClassName("vaixells"));
 
     let speed = 1;
     let activeImg = 0;
@@ -39,6 +39,35 @@ window.onload = function () {
             document.body.appendChild(barril);
         }
     }
+
+    function checkTouchBarrils() {
+        console.log("Check touch barrils");
+        vaixells = Array.from(document.getElementsByClassName("vaixells"));
+        barrils = Array.from(document.getElementsByClassName("barrils"));
+        
+        let vaixellRect;
+        let barrilRect;
+
+        for (let vaixell of vaixells) {
+            vaixellRect = vaixell.getBoundingClientRect();
+
+            for (let barril of barrils) {
+                barrilRect = barril.getBoundingClientRect();
+
+                if(vaixellRect.right < barrilRect.left ||
+                    vaixellRect.left > barrilRect.right ||
+                    vaixellRect.bottom < barrilRect.top ||
+                    vaixellRect.top > barrilRect.bottom) {
+                    
+                    barril[i].style.display = "none";
+                    barrils[i].remove();
+                    barrils.splice(i, 1);
+                }
+            };
+        }
+    }
+
+    const intervalBarrils = setInterval(checkTouchBarrils, 100);
 
     function animate() {
       vaixells.forEach((vaixell, index) => {
