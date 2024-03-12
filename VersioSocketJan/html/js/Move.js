@@ -1,29 +1,22 @@
 window.onload = function start() {
-    var image = null;
-    var position = null;
     var positions = [];
     var directionsShips = [];
+    var rotationAngles = [];
     var images = document.getElementsByClassName("imatge");
     var worker = new Worker("js/worker.js");
     worker.postMessage('Happy Birthday');
 
     for (var i = 0; i < document.getElementsByClassName("imatge").length; i++) {
+        rotationAngles.push(0);
         positions.push({ left: 0, top: 0, rotation: "" });
         directionsShips.push({ "direction": "right" });
     }
 
     var speed = 1; 
-    var comptadorTecla = 0;
     var webSocket = new WebSocket('ws://172.23.1.129:3000');
+    var radian = 0;
 
     var selectedImage = null;
-
-    var keysPressed = {
-        "A": false,
-        "D": false,
-        "W": false,
-        "S": false
-    };
 
     var keysNumbers = {
         "1": false,
@@ -39,173 +32,75 @@ window.onload = function start() {
 
     webSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
-        if (data.selectedImage && data.direction && data.transform) {
-            directionsShips[parseInt(data.selectedImage)]["direction"] = data.direction;
-            image.style.transform = data.transform;
+
+        if (data.key) {
+            switch (data.key) {
+                case "A":
+                  rotationAngles[selectedImage] -= 5;
+                  break;
+                case "D":
+                  rotationAngles[selectedImage] += 5;
+                  break;
+                case "Number":
+                  selectedImage = message.selectedImage;
+                  break;
+            }
         }
+
+        images[selectedImage].style.transform = "rotate(" + rotationAngles[selectedImage] + "deg)";
+
     }
 
     function moveImage() {
-        if (image != null) {
-
-            images = document.getElementsByClassName("imatge");
-
-            for (var i = 0; i < images.length; i++) {
-                if (images[i] != image) {
-
-                    var direction = directionsShips[i]["direction"];
-                    switch (direction) {
-                        case "left":
-                            positions[i].rotation = "rotate(180deg)";
-                            positions[i].left -= speed;
-                            if (positions[i].left < -images[i].offsetWidth) {
-                                positions[i].left = window.innerWidth;
-                            }
-                            break;
-                        case "right":
-                            positions[i].rotation = "rotate(0deg)";
-                            positions[i].left += speed;
-                            if (positions[i].left > window.innerWidth) {
-                                positions[i].left = -images[i].offsetWidth;
-                            }
-                            break;
-                        case "up":
-                            positions[i].rotation = "rotate(270deg)";
-                            positions[i].top -= speed;
-                            if (positions[i].top < -images[i].offsetHeight) {
-                                positions[i].top = window.innerHeight;
-                            }
-                            break;
-                        case "down":
-                            positions[i].rotation = "rotate(90deg)";
-                            positions[i].top += speed;
-                            if (positions[i].top > window.innerHeight) {
-                                positions[i].top = -images[i].offsetHeight;
-                            }
-                            break;
-                    }
-
-                    images[i].style.left = positions[i].left + "px";
-                    images[i].style.top = positions[i].top + "px";
+        for (var i = 0; i < images.length; i++) {
+            radian = rotationAngles[i] * Math.PI / 180;
+            positions[i].left += speed * Math.cos(radian);
+            positions[i].top += speed * Math.sin(radian);
             
-                    if (positions[i] >= window.innerWidth) {
-                        positions[i] = -images[i].width;
-                    }
-                    if (positions[i] >= window.innerHeight) {
-                        positions[i] = -images[i].height;
-                    }
-                    images[i].style.transform = positions[i].rotation;
-                    
-                    webSocket.send(JSON.stringify({
-                        selectedImage: i,
-                        direction: direction,
-                        transform: positions[i].rotation
-                    }));
-                }
+            if (positions[i].left < -images[i].offsetWidth) {
+                positions[i].left = window.innerWidth;
             }
 
-            position = positions[selectedImage];
-
-            switch (directionsShips[selectedImage]["direction"]) {
-                case "left":
-                    if (comptadorTecla == 0) {
-                        comptadorTecla++;
-                    }
-
-                    position.rotation = "rotate(180deg)";
-                    position.left -= speed;
-                    if (position.left < -image.offsetWidth) {
-                        position.left = window.innerWidth;
-                    }
-                    break;
-
-                case "right":
-                    if (comptadorTecla == 0) {
-                        comptadorTecla++;
-                    }
-                    
-                    position.rotation = "rotate(0deg)";
-                    position.left += speed;
-                    if (position.left > window.innerWidth) {
-                        position.left = -image.offsetWidth;
-                    }
-                    break;
-
-                case "up":
-                    if (comptadorTecla == 0) {
-                        comptadorTecla++;
-                    }
-                    
-                    position.rotation = "rotate(270deg)";
-                    position.top -= speed;
-                    if (position.top < -image.offsetHeight) {
-                        position.top = window.innerHeight;
-                    }
-                    break;
-
-                case "down":
-                    if (comptadorTecla == 0) {
-                        comptadorTecla++;
-                    }
-
-                    position.rotation = "rotate(90deg)";
-                    position.top += speed;
-                    if (position.top > window.innerHeight) {
-                        position.top = -image.offsetHeight;
-                    }
-                    break;
+            if (positions[i].left > window.innerWidth) {
+                positions[i].left = -images[i].offsetWidth;
             }
 
-            image.style.left = position.left + "px";
-            image.style.top = position.top + "px";
-    
-            if (position >= window.innerWidth) {
-                position = -image.width;
-            }
-            if (position >= window.innerHeight) {
-                position = -image.height;
+            if (positions[i].top < -images[i].offsetHeight) {
+                positions[i].top = window.innerHeight;
             }
 
-            webSocket.send(JSON.stringify({
-                selectedImage: selectedImage,
-                direction: directionsShips[selectedImage]["direction"],
-                transform: position.rotation
-            }));
+            if (positions[i].top > window.innerHeight) {
+                positions[i].top = -images[i].offsetHeight;
+            }
+
+            images[i].style.left = positions[i].left + "px";
+            images[i].style.top = positions[i].top + "px";
         }
 
         requestAnimationFrame(moveImage);
     }
 
     window.addEventListener("keydown", function(event) {
-        if (event.key.toUpperCase() in keysPressed 
-            && selectedImage != null) {
-
+        if (selectedImage != null) {
             switch (event.key.toUpperCase()) {
                 case "A":
-                    directionsShips[selectedImage]["direction"] = "left";
+                    rotationAngles[selectedImage] -= 10;
                     break;
                 case "D":
-                    directionsShips[selectedImage]["direction"] = "right";
-                    break;
-                case "W":
-                    directionsShips[selectedImage]["direction"] = "up";
-                    break;
-                case "S":
-                    directionsShips[selectedImage]["direction"] = "down";
+                    rotationAngles[selectedImage] += 10;
                     break;
             }
         }
 
         if (event.key in keysNumbers) {
-            image = document.getElementsByClassName("imatge")[event.key - 1];
+            webSocket.send(JSON.stringify({ key: "Number", value: event.key, activeImg: activeImg })); 
+            
             selectedImage = (parseInt(event.key) - 1);
             console.log("imatge seleccionada " + selectedImage);
         }
+
+        images[selectedImage].style.transform = "rotate(" + rotationAngles[selectedImage] + "deg)";
     });
     
-    window.addEventListener("keyup", function(event) {
-        comptadorTecla = 0;
-    });
-
     moveImage();
 }

@@ -14,7 +14,7 @@ window.onload = function start() {
 
     var speed = 1; 
     var comptadorTecla = 0;
-    var webSocket = new WebSocket('ws://localhost:3000');
+    var webSocket = new WebSocket('ws://172.23.1.129:3000');
 
     var selectedImage = null;
 

@@ -15,15 +15,12 @@ wss.on("connection", (ws) => {
         try {
             const data = JSON.parse(message);
 
-            if (data) {
-                if (data.selectedImage && data.direction && data.transform) {
-                    wss.clients.forEach(function each(client) {
-                        console.log("Message from server: " + data.direction);
-                        client.send(JSON.stringify(data));
-                    });
-                }
+            if (data && data.direction) {
+                wss.clients.forEach(function each(client) {
+                    console.log("Message from server: " + data.direction);
+                    client.send(JSON.stringify(data));
+                });
             }
-            
         } catch (error) {
             console.error("Error to process message: " + error);
         }
