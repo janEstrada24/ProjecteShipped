@@ -1,7 +1,5 @@
 window.onload = function () {
   let imgs = Array.from(document.getElementsByClassName("Jugador1"));
-  
-
 
   let speed = 1;
   let activeImg = 0;
@@ -14,22 +12,36 @@ window.onload = function () {
     const centerY = window.innerHeight / 2;
     var randomX;
     var randomY;
+    var positions = [];
+
     for (let i = 0; i < 10; i++) {
-      
       let meteorit = document.createElement("img");
       meteorit.src = "/Images/Meteorit.png";
       meteorit.classList.add("Meteorit");
       meteorit.style.position = "absolute";
 
-      randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-      randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+      while (true) {
+        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
+        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+
+        if (
+          positions.every(
+            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
+          )
+        ) {
+          break;
+        }
+      }
+
+      positions.push({ x: randomX, y: randomY });
+
       randomWidth = 2 + Math.random() * 2;
       meteorit.style.left = randomX + "px";
       meteorit.style.top = randomY + "px";
       meteorit.style.width = `${randomWidth}%`;
       document.body.appendChild(meteorit);
     }
-    
+
     Meteorit = Array.from(document.getElementsByClassName("Meteorit"));
   }
   function animate() {
