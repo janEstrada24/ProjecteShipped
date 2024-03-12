@@ -44,6 +44,7 @@ window.onload = function () {
       if (activeImg >= imgs.length) {
         activeImg = imgs.length - 1;
       }
+      webSocket.send(JSON.stringify({ key: "Number", value: event.key, activeImg: activeImg })); // Enviar el número presionado y activeImg al socket
     }
 
     switch (event.key.toLowerCase()) {
@@ -55,6 +56,7 @@ window.onload = function () {
         webSocket.send(JSON.stringify({ key: "D" }));
         degrees[activeImg] += 5;
         break;
+       
     }
 
     imgs[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
@@ -71,6 +73,10 @@ window.onload = function () {
       case "D":
         degrees[activeImg] += 5;
         break;
+      case "Number":
+        activeImg = message.activeImg;
+        break;
+      
     }
 
     imgs[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
