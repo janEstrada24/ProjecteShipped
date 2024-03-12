@@ -14,7 +14,7 @@ window.onload = function start() {
 
     var speed = 1; 
     var comptadorTecla = 0;
-    var webSocket = new WebSocket('ws://172.23.1.129:3000');
+    var webSocket = new WebSocket('ws://localhost:3000');
 
     var selectedImage = null;
 
@@ -39,8 +39,9 @@ window.onload = function start() {
 
     webSocket.onmessage = function(event) {
         var data = JSON.parse(event.data);
-        if (data.selectedImage && data.direction && data.transform) {
-            directionsShips[parseInt(data.selectedImage)]["direction"] = data.direction;
+        if (data.direction) {
+            directionsShips[selectedImage]["direction"] = data.direction;
+            console.log("Missatge rebut des del servidor: " + data.direction);
             image.style.transform = data.transform;
         }
     }
@@ -95,12 +96,6 @@ window.onload = function start() {
                         positions[i] = -images[i].height;
                     }
                     images[i].style.transform = positions[i].rotation;
-                    
-                    webSocket.send(JSON.stringify({
-                        selectedImage: i,
-                        direction: direction,
-                        transform: positions[i].rotation
-                    }));
                 }
             }
 
@@ -109,10 +104,13 @@ window.onload = function start() {
             switch (directionsShips[selectedImage]["direction"]) {
                 case "left":
                     if (comptadorTecla == 0) {
+                        webSocket.send(JSON.stringify({
+                            direction: "left",
+                            transform: 'rotate(180deg)'
+                        }));
                         comptadorTecla++;
                     }
-
-                    position.rotation = "rotate(180deg)";
+        
                     position.left -= speed;
                     if (position.left < -image.offsetWidth) {
                         position.left = window.innerWidth;
@@ -121,10 +119,13 @@ window.onload = function start() {
 
                 case "right":
                     if (comptadorTecla == 0) {
+                        webSocket.send(JSON.stringify({
+                            direction: "right",
+                            transform: 'rotate(0deg)'
+                        }));
                         comptadorTecla++;
                     }
-                    
-                    position.rotation = "rotate(0deg)";
+        
                     position.left += speed;
                     if (position.left > window.innerWidth) {
                         position.left = -image.offsetWidth;
@@ -133,10 +134,13 @@ window.onload = function start() {
 
                 case "up":
                     if (comptadorTecla == 0) {
+                        webSocket.send(JSON.stringify({
+                            direction: "up",
+                            transform: 'rotate(270deg)'
+                        }));
                         comptadorTecla++;
                     }
-                    
-                    position.rotation = "rotate(270deg)";
+        
                     position.top -= speed;
                     if (position.top < -image.offsetHeight) {
                         position.top = window.innerHeight;
@@ -145,10 +149,13 @@ window.onload = function start() {
 
                 case "down":
                     if (comptadorTecla == 0) {
+                        webSocket.send(JSON.stringify({
+                            direction: "down",
+                            transform: 'rotate(90deg)'
+                        }));
                         comptadorTecla++;
                     }
-
-                    position.rotation = "rotate(90deg)";
+    
                     position.top += speed;
                     if (position.top > window.innerHeight) {
                         position.top = -image.offsetHeight;
@@ -165,12 +172,6 @@ window.onload = function start() {
             if (position >= window.innerHeight) {
                 position = -image.height;
             }
-
-            webSocket.send(JSON.stringify({
-                selectedImage: selectedImage,
-                direction: directionsShips[selectedImage]["direction"],
-                transform: position.rotation
-            }));
         }
 
         requestAnimationFrame(moveImage);
