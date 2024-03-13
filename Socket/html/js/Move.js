@@ -6,7 +6,6 @@ window.onload = function () {
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
 
-  let quantityBarrils = 10;
 
   const webSocket = new WebSocket("ws:/172.23.2.211:3000");
 
@@ -33,6 +32,7 @@ function addBarrils() {
     barril.src = "/Images/barril.png";
     barril.classList.add("barrils");
     barril.style.position = "absolute";
+    
 
     while (true) {
       randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
@@ -93,6 +93,7 @@ function addMeteorit() {
   meteorits = Array.from(document.getElementsByClassName("Meteorit"));
 }
 
+
   function checkTouchBarrils() {
     console.log("Check touch barrils");
     vaixells = Array.from(document.getElementsByClassName("vaixells"));
@@ -146,6 +147,34 @@ function addMeteorit() {
     return true;
   }
 
+  function moveMeteorits() {
+    const meteorits = Array.from(document.getElementsByClassName("Meteorit"));
+
+meteorits.forEach((meteorit) => {
+  const meteoritWidth = meteorit.offsetWidth;
+  const windowWidth = window.innerWidth;
+  const meteoritWidthPercentage = (meteoritWidth / windowWidth) * 100;
+
+  // Solo mover meteoritos con un ancho entre 2% y 3%
+  if (meteoritWidthPercentage >= 2 && meteoritWidthPercentage <= 3) {
+    const speed = 1;
+    const currentLeft = meteorit.offsetLeft;
+
+    let newLeft = currentLeft + speed;
+
+    if (newLeft > windowWidth) {
+      newLeft = -meteoritWidth;
+    }
+
+    meteorit.style.left = newLeft + "px";
+  }
+});
+  }
+
+  setInterval(moveMeteorits, 100);
+
+ 
+  
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
   function animate() {
@@ -177,10 +206,12 @@ function addMeteorit() {
 
     requestAnimationFrame(animate);
   }
-
+  
   animate();
   addBarrils();
   addMeteorit();
+  moveMeteorits() 
+  
 
   window.addEventListener("keydown", function (event) {
     if (event.key >= "1" && event.key <= "5") {
