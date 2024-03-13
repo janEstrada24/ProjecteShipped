@@ -25,19 +25,34 @@ window.onload = function () {
     const centerY = window.innerHeight / 2;
     var randomX;
     var randomY;
+    var positions = [];
 
-    for (let i = 0; i < quantityBarrils; i++) {
+    for (let i = 0; i < 10; i++) {
       let barril = document.createElement("img");
       barril.src = "/Images/barril.png";
       barril.classList.add("barrils");
       barril.style.position = "absolute";
 
-      randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-      randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+      while (true) {
+        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
+        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+
+        if (
+          positions.every(
+            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
+          )
+        ) {
+          break;
+        }
+      }
+
+      positions.push({ x: randomX, y: randomY });
+
       barril.style.left = randomX + "px";
       barril.style.top = randomY + "px";
       document.body.appendChild(barril);
     }
+    barrils = Array.from(document.getElementsByClassName("barrils"));
   }
   function addMeteorit() {
     const windowWidth = window.innerWidth * 0.5;
