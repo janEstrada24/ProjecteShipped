@@ -1,4 +1,5 @@
 API/node_modules
+API/Database
 API/.env
 Frontend/VersioSocketGuillem/node_modules
 Frontend/VersioSocketJan/node_modules
