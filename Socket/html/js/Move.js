@@ -18,81 +18,80 @@ window.onload = function () {
    * D'aquesta manera, els barrils mai apareixeran en una posicio
    * on hi hagin vaixells.
    */
-  function addBarrils() {
-    const windowWidth = window.innerWidth * 0.5;
-    const windowHeight = window.innerHeight * 0.9;
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    var randomX;
-    var randomY;
-    var positions = [];
+  var positions = [];
 
-    for (let i = 0; i < 10; i++) {
-      let barril = document.createElement("img");
-      barril.src = "/Images/barril.png";
-      barril.classList.add("barrils");
-      barril.style.position = "absolute";
+function addBarrils() {
+  const windowWidth = window.innerWidth * 0.5;
+  const windowHeight = window.innerHeight * 0.9;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  var randomX;
+  var randomY;
 
-      while (true) {
-        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+  for (let i = 0; i < 10; i++) {
+    let barril = document.createElement("img");
+    barril.src = "/Images/barril.png";
+    barril.classList.add("barrils");
+    barril.style.position = "absolute";
 
-        if (
-          positions.every(
-            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
-          )
-        ) {
-          break;
-        }
+    while (true) {
+      randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
+      randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+
+      if (
+        positions.every(
+          (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
+        )
+      ) {
+        break;
       }
-
-      positions.push({ x: randomX, y: randomY });
-
-      barril.style.left = randomX + "px";
-      barril.style.top = randomY + "px";
-      document.body.appendChild(barril);
-    }
-    barrils = Array.from(document.getElementsByClassName("barrils"));
-  }
-  function addMeteorit() {
-    const windowWidth = window.innerWidth * 0.5;
-    const windowHeight = window.innerHeight * 0.9;
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    var randomX;
-    var randomY;
-    var positions = [];
-
-    for (let i = 0; i < 10; i++) {
-      let meteorit = document.createElement("img");
-      meteorit.src = "/Images/Meteorit.png";
-      meteorit.classList.add("Meteorit");
-      meteorit.style.position = "absolute";
-
-      while (true) {
-        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
-
-        if (
-          positions.every(
-            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
-          )
-        ) {
-          break;
-        }
-      }
-
-      positions.push({ x: randomX, y: randomY });
-
-      randomWidth = 2 + Math.random() * 2;
-      meteorit.style.left = randomX + "px";
-      meteorit.style.top = randomY + "px";
-      meteorit.style.width = `${randomWidth}%`;
-      document.body.appendChild(meteorit);
     }
 
-    Meteorit = Array.from(document.getElementsByClassName("Meteorit"));
+    positions.push({ x: randomX, y: randomY });
+
+    barril.style.left = randomX + "px";
+    barril.style.top = randomY + "px";
+    document.body.appendChild(barril);
   }
+  barrils = Array.from(document.getElementsByClassName("barrils"));
+}
+
+function addMeteorit() {
+  const windowWidth = window.innerWidth * 0.5;
+  const windowHeight = window.innerHeight * 0.9;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2;
+  var randomX;
+  var randomY;
+
+  for (let i = 0; i < 10; i++) {
+    let meteorit = document.createElement("img");
+    meteorit.src = "/Images/Meteorit.png";
+    meteorit.classList.add("Meteorit");
+    meteorit.style.position = "absolute";
+
+    while (true) {
+      randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
+      randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+
+      if (
+        positions.every(
+          (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
+        )
+      ) {
+        break;
+      }
+    }
+
+    positions.push({ x: randomX, y: randomY });
+    randomWidth = 2 + Math.random() * 2;
+    meteorit.style.left = randomX + "px";
+    meteorit.style.top = randomY + "px";
+    meteorit.style.width = `${randomWidth}%`;
+    document.body.appendChild(meteorit);
+  }
+  meteorits = Array.from(document.getElementsByClassName("Meteorit"));
+}
 
   function checkTouchBarrils() {
     console.log("Check touch barrils");
