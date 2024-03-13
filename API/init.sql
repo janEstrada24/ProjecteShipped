@@ -37,7 +37,6 @@ CREATE TABLE Participant (
     PRIMARY KEY (CorreuUsuari, IDPartida)
 );
 
-
 -- Crear taula Vaixell
 CREATE TABLE Vaixell (
     CorreuUsuari VARCHAR(50),
