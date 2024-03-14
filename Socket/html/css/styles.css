@@ -15,3 +15,10 @@ body {
     position: absolute;
     width: 2%;
 }
+.bala {
+    position: absolute;
+    width: 1%;
+   
+    border-radius: 50%;
+
+}

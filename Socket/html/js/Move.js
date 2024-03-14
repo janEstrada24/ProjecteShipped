@@ -260,4 +260,6 @@ meteorits.forEach((meteorit) => {
 
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
   };
+  
 };
+
