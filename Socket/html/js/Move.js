@@ -6,7 +6,6 @@ window.onload = function () {
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
 
-
   const webSocket = new WebSocket("ws:/172.23.2.211:3000");
 
   /**
@@ -19,80 +18,78 @@ window.onload = function () {
    */
   var positions = [];
 
-function addBarrils() {
-  const windowWidth = window.innerWidth * 0.5;
-  const windowHeight = window.innerHeight * 0.9;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  var randomX;
-  var randomY;
+  function addBarrils() {
+    const windowWidth = window.innerWidth * 0.5;
+    const windowHeight = window.innerHeight * 0.9;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    var randomX;
+    var randomY;
 
-  for (let i = 0; i < 10; i++) {
-    let barril = document.createElement("img");
-    barril.src = "/Images/barril.png";
-    barril.classList.add("barrils");
-    barril.style.position = "absolute";
-    
+    for (let i = 0; i < 10; i++) {
+      let barril = document.createElement("img");
+      barril.src = "/Images/barril.png";
+      barril.classList.add("barrils");
+      barril.style.position = "absolute";
 
-    while (true) {
-      randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-      randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+      while (true) {
+        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
+        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
 
-      if (
-        positions.every(
-          (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
-        )
-      ) {
-        break;
+        if (
+          positions.every(
+            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
+          )
+        ) {
+          break;
+        }
       }
+
+      positions.push({ x: randomX, y: randomY });
+
+      barril.style.left = randomX + "px";
+      barril.style.top = randomY + "px";
+      document.body.appendChild(barril);
     }
-
-    positions.push({ x: randomX, y: randomY });
-
-    barril.style.left = randomX + "px";
-    barril.style.top = randomY + "px";
-    document.body.appendChild(barril);
+    barrils = Array.from(document.getElementsByClassName("barrils"));
   }
-  barrils = Array.from(document.getElementsByClassName("barrils"));
-}
 
-function addMeteorit() {
-  const windowWidth = window.innerWidth * 0.5;
-  const windowHeight = window.innerHeight * 0.9;
-  const centerX = window.innerWidth / 2;
-  const centerY = window.innerHeight / 2;
-  var randomX;
-  var randomY;
+  function addMeteorit() {
+    const windowWidth = window.innerWidth * 0.5;
+    const windowHeight = window.innerHeight * 0.9;
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+    var randomX;
+    var randomY;
 
-  for (let i = 0; i < 10; i++) {
-    let meteorit = document.createElement("img");
-    meteorit.src = "/Images/Meteorit.png";
-    meteorit.classList.add("Meteorit");
-    meteorit.style.position = "absolute";
+    for (let i = 0; i < 10; i++) {
+      let meteorit = document.createElement("img");
+      meteorit.src = "/Images/Meteorit.png";
+      meteorit.classList.add("Meteorit");
+      meteorit.style.position = "absolute";
 
-    while (true) {
-      randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-      randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
+      while (true) {
+        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
+        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
 
-      if (
-        positions.every(
-          (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
-        )
-      ) {
-        break;
+        if (
+          positions.every(
+            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
+          )
+        ) {
+          break;
+        }
       }
+
+      positions.push({ x: randomX, y: randomY });
+      randomWidth = 2 + Math.random() * 2;
+      meteorit.style.left = randomX + "px";
+      meteorit.style.top = randomY + "px";
+      meteorit.style.width = `${randomWidth}%`;
+      document.body.appendChild(meteorit);
     }
-
-    positions.push({ x: randomX, y: randomY });
-    randomWidth = 2 + Math.random() * 2;
-    meteorit.style.left = randomX + "px";
-    meteorit.style.top = randomY + "px";
-    meteorit.style.width = `${randomWidth}%`;
-    document.body.appendChild(meteorit);
+    meteorits = Array.from(document.getElementsByClassName("Meteorit"));
   }
-  meteorits = Array.from(document.getElementsByClassName("Meteorit"));
-}
-
 
   function checkTouchBarrils() {
     console.log("Check touch barrils");
@@ -150,31 +147,29 @@ function addMeteorit() {
   function moveMeteorits() {
     const meteorits = Array.from(document.getElementsByClassName("Meteorit"));
 
-meteorits.forEach((meteorit) => {
-  const meteoritWidth = meteorit.offsetWidth;
-  const windowWidth = window.innerWidth;
-  const meteoritWidthPercentage = (meteoritWidth / windowWidth) * 100;
+    meteorits.forEach((meteorit) => {
+      const meteoritWidth = meteorit.offsetWidth;
+      const windowWidth = window.innerWidth;
+      const meteoritWidthPercentage = (meteoritWidth / windowWidth) * 100;
 
-  // Solo mover meteoritos con un ancho entre 2% y 3%
-  if (meteoritWidthPercentage >= 2 && meteoritWidthPercentage <= 3) {
-    const speed = 1;
-    const currentLeft = meteorit.offsetLeft;
+      // Solo mover meteoritos con un ancho entre 2% y 3%
+      if (meteoritWidthPercentage >= 2 && meteoritWidthPercentage <= 3) {
+        const speed = 1;
+        const currentLeft = meteorit.offsetLeft;
 
-    let newLeft = currentLeft + speed;
+        let newLeft = currentLeft + speed;
 
-    if (newLeft > windowWidth) {
-      newLeft = -meteoritWidth;
-    }
+        if (newLeft > windowWidth) {
+          newLeft = -meteoritWidth;
+        }
 
-    meteorit.style.left = newLeft + "px";
-  }
-});
+        meteorit.style.left = newLeft + "px";
+      }
+    });
   }
 
   setInterval(moveMeteorits, 100);
 
- 
-  
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
   function animate() {
@@ -206,12 +201,11 @@ meteorits.forEach((meteorit) => {
 
     requestAnimationFrame(animate);
   }
-  
+
   animate();
   addBarrils();
   addMeteorit();
-  moveMeteorits() 
-  
+  moveMeteorits();
 
   window.addEventListener("keydown", function (event) {
     if (event.key >= "1" && event.key <= "5") {
@@ -237,6 +231,14 @@ meteorits.forEach((meteorit) => {
         webSocket.send(JSON.stringify({ key: "D" }));
         degrees[activeImg] += 5;
         break;
+      case "l":
+        let municon = document.createElement("img");
+        municon.src = "/Images/Municio.jpg";
+        municon.classList.add("municio");
+        municon.style.left = vaixells[activeImg].offsetLeft + "px";
+        municon.style.top = vaixells[activeImg].offsetTop + "px";
+        document.body.appendChild(municon);
+        break;
     }
 
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
@@ -260,6 +262,4 @@ meteorits.forEach((meteorit) => {
 
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
   };
-  
 };
-
