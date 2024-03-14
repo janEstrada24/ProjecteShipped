@@ -45,7 +45,6 @@ CREATE TABLE Vaixell (
     Municio INTEGER,
     Color VARCHAR(25),
     Estat VARCHAR(15),
-    FOREIGN KEY (CorreuUsuari) REFERENCES Participant (CorreuUsuari),
-    FOREIGN KEY (IDPartida) REFERENCES Participant (IDPartida),
+    FOREIGN KEY (CorreuUsuari, IDPartida) REFERENCES Participant (CorreuUsuari, IDPartida),
     PRIMARY KEY (CorreuUsuari, IDPartida, NumVaixell)
 );
