@@ -8,7 +8,8 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=8*U9l9
     ports:
-      - '5432:5432'
+      - '1433:5432'
+
   pgadmin:
     image: dpage/pgadmin4
     environment:

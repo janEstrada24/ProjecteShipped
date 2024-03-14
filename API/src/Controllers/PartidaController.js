@@ -24,3 +24,8 @@ const getPartidesFinalitzades = async (req, res) => {
         res.status(200).json(response.rows);
     });
 }
+
+module.exports = {
+    getPartidesActives,
+    getPartidesFinalitzades,
+};
