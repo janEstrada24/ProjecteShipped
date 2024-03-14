@@ -125,6 +125,19 @@ window.onload = function () {
     for (let meteorit of Meteorit) {
       let meteoritRect = meteorit.getBoundingClientRect();
 
+      let municio = document.querySelector(".municio");
+      if (municio) {
+        let municioRect = municio.getBoundingClientRect();
+        if (
+          municioRect.left < meteoritRect.right &&
+          municioRect.right > meteoritRect.left &&
+          municioRect.top < meteoritRect.bottom &&
+          municioRect.bottom > meteoritRect.top
+        ) {
+          municio.parentNode.removeChild(municio);
+        }
+      }
+
       for (let vaixell of vaixells) {
         let vaixellRect = vaixell.getBoundingClientRect();
 
@@ -167,9 +180,6 @@ window.onload = function () {
       }
     });
   }
-  
-  
- 
 
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
@@ -208,7 +218,7 @@ window.onload = function () {
   addBarrils();
   addMeteorit();
   moveMeteorits();
-  
+
   window.addEventListener("keydown", function (event) {
     if (event.key >= "1" && event.key <= "5") {
       activeImg = parseInt(event.key) - 1;
