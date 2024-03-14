@@ -167,11 +167,13 @@ window.onload = function () {
       }
     });
   }
-
-  setInterval(moveMeteorits, 100);
+  
+  
+ 
 
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
+
   function animate() {
     vaixells.forEach((vaixell, index) => {
       let vaixellWidth = vaixell.offsetWidth;
@@ -206,7 +208,7 @@ window.onload = function () {
   addBarrils();
   addMeteorit();
   moveMeteorits();
-
+  
   window.addEventListener("keydown", function (event) {
     if (event.key >= "1" && event.key <= "5") {
       activeImg = parseInt(event.key) - 1;
@@ -238,6 +240,16 @@ window.onload = function () {
         municon.style.left = vaixells[activeImg].offsetLeft + "px";
         municon.style.top = vaixells[activeImg].offsetTop + "px";
         document.body.appendChild(municon);
+        let municioSpeed = speed * 2; // Doble de la velocidad del vaixell
+        let municonDegrees = degrees[activeImg] * (Math.PI / 180);
+        let municioLeft = vaixells[activeImg].offsetLeft;
+        let municioTop = vaixells[activeImg].offsetTop;
+        let municonInterval = setInterval(function () {
+          municioLeft += municioSpeed * Math.cos(municonDegrees);
+          municioTop += municioSpeed * Math.sin(municonDegrees);
+          municon.style.left = municioLeft + "px";
+          municon.style.top = municioTop + "px";
+        }, 1000 / 60); // Ajustar la velocidad de movimiento
         break;
     }
 
