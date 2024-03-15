@@ -32,14 +32,12 @@ const postPartida = (async (req, res) => {
     const values = [
                     uuid,
                     req.body.nom,
-                    req.body.datainici,
-                    req.body.datafinal,
-                    req.body.correucreador, 
-                    req.body.correuguanyador,
+                    new Date().toISOString(),
+                    req.body.correucreador,
                     'actiu'
                     ];
 
-    const query = 'INSERT INTO partida (id, nom, datainici, datafinal, correucreador, correuguanyador, estat) VALUES ($1, $2, $3, $4, $5, $6, $7)';
+    const query = 'INSERT INTO partida (id, nom, datainici, correucreador, estat) VALUES ($1, $2, $3, $4, $5)';
 
     client
         .query(query, values, (err, result) => {
@@ -51,8 +49,23 @@ const postPartida = (async (req, res) => {
         });
 });
 
+const putDataFinalGuanyadorAndEstatPartida = (async (req, res) => {
+    const values = [req.body.id, new Date().toISOString(), req.body.correuguanyador, 'finalitzada'];
+    const query = 'UPDATE partida SET datafinal = $2, correuguanyador = $3, estat = $4 WHERE id = $1';
+
+    client
+        .query(query, values, (err, result) => {
+            if (err) {
+                res.status(404).json({ error: "No s'ha pogut actualitzar la partida"});
+            } else {
+                res.status(200).json({ message: "Partida actualitzada correctament"});
+            }
+        });
+});
+
 module.exports = {
     getPartidesActives,
     getPartidesFinalitzades,
-    postPartida
+    postPartida,
+    putDataFinalGuanyadorAndEstatPartida
 };

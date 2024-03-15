@@ -9,5 +9,6 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.get("/partidesActives", partidesController.getPartidesActives);
 router.get("/partidesFinalitzades", partidesController.getPartidesFinalitzades);
 router.post("/postPartida", partidesController.postPartida);
+router.put("/putDataFinalAndEstatPartida", partidesController.putDataFinalGuanyadorAndEstatPartida);
 
 module.exports = router;

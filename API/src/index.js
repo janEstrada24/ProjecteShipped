@@ -7,12 +7,14 @@ const client = require("./Database/connection.js");
 
 const usuarisRoutes = require("./Routes/usuaris.js");
 const partidesRoutes = require("./Routes/partides.js");
+const participantsRoutes = require("./Routes/participants.js");
 
 app.use(cors({}));
 app.use(express.json());
 
 app.use("/usuaris", usuarisRoutes);
 app.use("/partides", partidesRoutes);
+app.use("/participants", participantsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
