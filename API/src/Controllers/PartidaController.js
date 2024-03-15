@@ -3,7 +3,7 @@ const { v4: uuidv4 } = require('uuid');
 
 const getPartidesActives = async (req, res) => {
     const values = ['activa'];
-    const query = 'SELECT * FROM partides WHERE estat = $1';
+    const query = 'SELECT * FROM partida WHERE estat = $1';
     
     await client.query(query, values, (error, response) => {
         if (error) {
@@ -16,7 +16,7 @@ const getPartidesActives = async (req, res) => {
 
 const getPartidesFinalitzades = async (req, res) => {
     const values = ['finalitzada'];
-    const query = 'SELECT * FROM partides WHERE estat = $1';
+    const query = 'SELECT * FROM partida WHERE estat = $1';
     
     await client.query(query, values, (error, response) => {
         if (error) {
