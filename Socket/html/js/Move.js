@@ -158,6 +158,30 @@ window.onload = function () {
 
     return true;
   }
+  function checkTouchVaixell() {
+    var vaixells = Array.from(document.getElementsByClassName("vaixells"));
+    var municio = Array.from(document.getElementsByClassName("municio"));
+
+    vaixells.forEach(function (vaixell, i) {
+      municio.forEach(function (muni, j) {
+        var vaixellRect = vaixell.getBoundingClientRect();
+        var muniRect = muni.getBoundingClientRect();
+
+        if (
+          vaixellRect.x < muniRect.x + muniRect.width &&
+          vaixellRect.x + vaixellRect.width > muniRect.x &&
+          vaixellRect.y < muniRect.y + muniRect.height &&
+          vaixellRect.y + vaixellRect.height > muniRect.y
+        ) {
+          // Si se tocan, eliminarlos del DOM y de los arrays
+          vaixell.parentNode.removeChild(vaixell);
+          muni.parentNode.removeChild(muni);
+          vaixells.splice(i, 1);
+          municio.splice(j, 1);
+        }
+      });
+    });
+  }
   function moveMeteorits() {
     const meteorits = Array.from(document.getElementsByClassName("Meteorit"));
 
@@ -184,6 +208,7 @@ window.onload = function () {
 
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
+ const intervalVaixell = setInterval(checkTouchVaixell, 100);
 
   function animate() {
     vaixells.forEach((vaixell, index) => {
