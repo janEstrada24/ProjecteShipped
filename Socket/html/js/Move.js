@@ -204,7 +204,7 @@ window.onload = function () {
         meteorit.style.left = newLeft + "px";
       }
     });
-  }
+  } setInterval(moveMeteorits, 100);
 
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
