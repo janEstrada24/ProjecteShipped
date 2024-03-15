@@ -122,12 +122,12 @@ window.onload = function () {
     console.log("Check touch meteorit");
     vaixells = Array.from(document.getElementsByClassName("vaixells"));
     Meteorit = Array.from(document.getElementsByClassName("Meteorit"));
-  
+
     let municio = Array.from(document.getElementsByClassName("municio"));
-  
+
     for (let meteorit of Meteorit) {
       let meteoritRect = meteorit.getBoundingClientRect();
-  
+
       for (let municioItem of municio) {
         let municioRect = municioItem.getBoundingClientRect();
         if (
@@ -139,10 +139,10 @@ window.onload = function () {
           municioItem.parentNode.removeChild(municioItem);
         }
       }
-  
+
       for (let vaixell of vaixells) {
         let vaixellRect = vaixell.getBoundingClientRect();
-  
+
         if (
           vaixellRect.left < meteoritRect.right &&
           vaixellRect.right > meteoritRect.left &&
@@ -155,7 +155,7 @@ window.onload = function () {
         }
       }
     }
-  
+
     return true;
   }
   function moveMeteorits() {
@@ -244,31 +244,38 @@ window.onload = function () {
         webSocket.send(JSON.stringify({ key: "D" }));
         degrees[activeImg] += 5;
         break;
-        case "l":
-          let municon = document.createElement("img");
-          municon.src = "/Images/Municio.jpg";
-          municon.classList.add("municio");
-          municon.style.left = vaixells[activeImg].offsetLeft + "px";
-          municon.style.top = vaixells[activeImg].offsetTop + "px";
-          document.body.appendChild(municon);
-          let municioSpeed = speed * 4; // Doble de la velocidad del vaixell
-          let municonDegrees = degrees[activeImg] * (Math.PI / 180);
-          let municioLeft = vaixells[activeImg].offsetLeft;
-          let municioTop = vaixells[activeImg].offsetTop;
-          let municonInterval = setInterval(function () {
-            municioLeft += municioSpeed * Math.cos(municonDegrees);
-            municioTop += municioSpeed * Math.sin(municonDegrees);
-        
-            // Check if the municon is about to leave the screen
-            if (municioLeft < 0 || municioLeft > window.innerWidth || municioTop < 0 || municioTop > window.innerHeight) {
-              clearInterval(municonInterval); // Stop the municon movement
-              municon.remove(); // Optionally, remove the municon from the screen
-            } else {
-              municon.style.left = municioLeft + "px";
-              municon.style.top = municioTop + "px";
-            }
-          }, 1000 / 60); // Ajustar la velocidad de movimiento
-          break;
+      case "l":
+        let municon = document.createElement("img");
+        municon.src = "/Images/Municio.jpg";
+        municon.classList.add("municio");
+        municon.style.left = vaixells[activeImg].offsetLeft + "px";
+        municon.style.top = vaixells[activeImg].offsetTop + "px";
+        document.body.appendChild(municon);
+        let municioSpeed = speed * 4; // Doble de la velocidad del vaixell
+        let municonDegrees = degrees[activeImg] * (Math.PI / 180);
+        let municioLeft = vaixells[activeImg].offsetLeft;
+        let municioTop = vaixells[activeImg].offsetTop;
+        let municonInterval = setInterval(function () {
+          municioLeft += municioSpeed * Math.cos(municonDegrees);
+          municioTop += municioSpeed * Math.sin(municonDegrees);
+
+          // Check if the municon is about to leave the screen
+          if (municioLeft < 0) {
+            municioLeft = window.innerWidth;
+          } else if (municioLeft > window.innerWidth) {
+            municioLeft = 0;
+          }
+
+          if (municioTop < 0) {
+            municioTop = window.innerHeight;
+          } else if (municioTop > window.innerHeight) {
+            municioTop = 0;
+          }
+
+          municon.style.left = municioLeft + "px";
+          municon.style.top = municioTop + "px";
+        }, 1000 / 60); // Ajustar la velocidad de movimiento
+        break;
     }
 
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
