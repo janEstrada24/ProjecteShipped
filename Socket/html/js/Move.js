@@ -122,25 +122,27 @@ window.onload = function () {
     console.log("Check touch meteorit");
     vaixells = Array.from(document.getElementsByClassName("vaixells"));
     Meteorit = Array.from(document.getElementsByClassName("Meteorit"));
+  
+    let municio = Array.from(document.getElementsByClassName("municio"));
+  
     for (let meteorit of Meteorit) {
       let meteoritRect = meteorit.getBoundingClientRect();
-
-      let municio = document.querySelector(".municio");
-      if (municio) {
-        let municioRect = municio.getBoundingClientRect();
+  
+      for (let municioItem of municio) {
+        let municioRect = municioItem.getBoundingClientRect();
         if (
           municioRect.left < meteoritRect.right &&
           municioRect.right > meteoritRect.left &&
           municioRect.top < meteoritRect.bottom &&
           municioRect.bottom > meteoritRect.top
         ) {
-          municio.parentNode.removeChild(municio);
+          municioItem.parentNode.removeChild(municioItem);
         }
       }
-
+  
       for (let vaixell of vaixells) {
         let vaixellRect = vaixell.getBoundingClientRect();
-
+  
         if (
           vaixellRect.left < meteoritRect.right &&
           vaixellRect.right > meteoritRect.left &&
@@ -153,10 +155,9 @@ window.onload = function () {
         }
       }
     }
-
+  
     return true;
   }
-
   function moveMeteorits() {
     const meteorits = Array.from(document.getElementsByClassName("Meteorit"));
 
