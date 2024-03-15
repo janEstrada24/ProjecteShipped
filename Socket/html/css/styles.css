@@ -22,3 +22,8 @@ body {
     border-radius: 50%;
 
 }
+body {
+    background-image: url('/Images/Fons.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
