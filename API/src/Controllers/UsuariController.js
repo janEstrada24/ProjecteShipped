@@ -54,7 +54,7 @@ function getUsuariByCorreu(correu) {
 
 const getUsuarisAsc = async (req, res) => {
     try {
-        const response = await client.query("SELECT * FROM usuari ORDER BY Victories ASC, Empats ASC;");
+        const response = await client.query("SELECT * FROM usuari ORDER BY Victories ASC, Empats ASC WHERE estat = 'actiu';");
         res.status(200).json(response.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -63,17 +63,47 @@ const getUsuarisAsc = async (req, res) => {
 
 const getUsuarisDesc = async (req, res) => {
     try {
-        const response = await client.query("SELECT * FROM usuari ORDER BY Victories DESC, Empats DESC;");
+        const response = await client.query("SELECT * FROM usuari ORDER BY Victories DESC, Empats DESC WHERE estat = 'actiu';");
         res.status(200).json(response.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 };
 
+const sumarVictoria = (async (req, res) => {
+    const values = [req.body.correu, 'actiu'];
+    const query = 'UPDATE usuari SET victories = victories + 1 WHERE correu = $1 AND estat = $2';
+
+    client
+        .query(query, values, (err, result) => {
+            if (err) {
+                res.status(404).json({ error: "No hi han jugadors disponibles" });
+            } else {
+                res.status(200).json("Victoria sumada correctament");
+            }
+        });
+});
+
+const sumarEmpat = (async (req, res) => {
+    const values = [req.body.correu, 'actiu'];
+    const query = 'UPDATE usuari SET empats = empats + 1 WHERE correu = $1 AND estat = $2';
+
+    client
+        .query(query, values, (err, result) => {
+            if (err) {
+                res.status(404).json({ error: "No hi han jugadors disponibles" });
+            } else {
+                res.status(200).json("Empat sumat correctament");
+            }
+        });
+});
+
 module.exports = {
     login,
     logout,
     registre,
     getUsuarisAsc,
-    getUsuarisDesc
+    getUsuarisDesc,
+    sumarVictoria,
+    sumarEmpat
 };

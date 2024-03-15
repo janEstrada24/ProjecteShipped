@@ -11,5 +11,7 @@ router.post("/logout", usuarisController.logout);
 router.post("/registre", usuarisController.registre);
 router.get("/usuarisAsc", usuarisController.getUsuarisAsc);
 router.get("/usuarisDesc", usuarisController.getUsuarisDesc);
+router.put("/sumarVictoria", usuarisController.sumarVictoria);
+router.put("/sumarEmpat", usuarisController.sumarEmpat);
 
 module.exports = router;
