@@ -8,6 +8,7 @@ const client = require("./Database/connection.js");
 const usuarisRoutes = require("./Routes/usuaris.js");
 const partidesRoutes = require("./Routes/partides.js");
 const participantsRoutes = require("./Routes/participants.js");
+const vaixellsRoutes = require("./Routes/vaixells.js");
 
 app.use(cors({}));
 app.use(express.json());
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use("/usuaris", usuarisRoutes);
 app.use("/partides", partidesRoutes);
 app.use("/participants", participantsRoutes);
+app.use("/vaixells", vaixellsRoutes);
 
 const PORT = process.env.PORT || 3000;
 
