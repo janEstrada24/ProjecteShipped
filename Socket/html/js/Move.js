@@ -208,7 +208,7 @@ window.onload = function () {
 
   const intervalBarrils = setInterval(checkTouchBarrils, 100);
   const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
- const intervalVaixell = setInterval(checkTouchVaixell, 100);
+  const intervalVaixell = setInterval(checkTouchVaixell, 100);
 
   function animate() {
     vaixells.forEach((vaixell, index) => {
@@ -269,38 +269,55 @@ window.onload = function () {
         webSocket.send(JSON.stringify({ key: "D" }));
         degrees[activeImg] += 5;
         break;
-      case "l":
-        let municon = document.createElement("img");
-        municon.src = "/Images/Municio.jpg";
-        municon.classList.add("municio");
-        municon.style.left = vaixells[activeImg].offsetLeft + "px";
-        municon.style.top = vaixells[activeImg].offsetTop + "px";
-        document.body.appendChild(municon);
-        let municioSpeed = speed * 4; // Doble de la velocidad del vaixell
-        let municonDegrees = degrees[activeImg] * (Math.PI / 180);
-        let municioLeft = vaixells[activeImg].offsetLeft;
-        let municioTop = vaixells[activeImg].offsetTop;
-        let municonInterval = setInterval(function () {
-          municioLeft += municioSpeed * Math.cos(municonDegrees);
-          municioTop += municioSpeed * Math.sin(municonDegrees);
+        case "l":
+    let municon = document.createElement("img");
+    municon.src = "/Images/Municio.jpg";
+    municon.classList.add("municio");
 
-          // Check if the municon is about to leave the screen
-          if (municioLeft < 0) {
-            municioLeft = window.innerWidth;
-          } else if (municioLeft > window.innerWidth) {
-            municioLeft = 0;
-          }
+    // Calculate the position of the vaixell in front of the activeImg
+    let frontVaixellLeft =
+      vaixells[activeImg].offsetLeft +
+      vaixells[activeImg].offsetWidth *
+        Math.cos(degrees[activeImg] * (Math.PI / 180));
+    let frontVaixellTop =
+      vaixells[activeImg].offsetTop +
+      vaixells[activeImg].offsetHeight *
+        Math.sin(degrees[activeImg] * (Math.PI / 180));
 
-          if (municioTop < 0) {
-            municioTop = window.innerHeight;
-          } else if (municioTop > window.innerHeight) {
-            municioTop = 0;
-          }
+    // Add a constant value to move the municon further away on the diagonals
+    const offset = 15; // Change this value to what you need
+    frontVaixellLeft += offset * Math.cos(degrees[activeImg] * (Math.PI / 180));
+    frontVaixellTop += offset * Math.sin(degrees[activeImg] * (Math.PI / 180));
 
-          municon.style.left = municioLeft + "px";
-          municon.style.top = municioTop + "px";
-        }, 1000 / 60); // Ajustar la velocidad de movimiento
-        break;
+    municon.style.left = frontVaixellLeft;
+    municon.style.top = frontVaixellTop;
+    document.body.appendChild(municon);
+    let municioSpeed = speed * 5; // Doble de la velocidad del vaixell
+    let municonDegrees = degrees[activeImg] * (Math.PI / 180);
+    let municioLeft = frontVaixellLeft;
+    let municioTop = frontVaixellTop;
+
+    let municonInterval = setInterval(function () {
+      municioLeft += municioSpeed * Math.cos(municonDegrees);
+      municioTop += municioSpeed * Math.sin(municonDegrees);
+
+      // Check if the municon is about to leave the screen
+      if (municioLeft < 0) {
+        municioLeft = window.innerWidth;
+      } else if (municioLeft > window.innerWidth) {
+        municioLeft = 0;
+      }
+
+      if (municioTop < 0) {
+        municioTop = window.innerHeight;
+      } else if (municioTop > window.innerHeight) {
+        municioTop = 0;
+      }
+
+      municon.style.left = municioLeft + "px";
+      municon.style.top = municioTop + "px";
+    }, 1000 / 60); // Ajustar la velocidad de movimiento
+    break;
     }
 
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
