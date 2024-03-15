@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
 
+router.post("/login", usuarisController.login);
+router.post("/logout", usuarisController.logout);
+router.post("/registre", usuarisController.registre);
 router.get("/usuarisAsc", usuarisController.getUsuarisAsc);
 router.get("/usuarisDesc", usuarisController.getUsuarisDesc);
 
