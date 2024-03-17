@@ -1,6 +1,7 @@
 API/node_modules
 API/Database
 API/src/.env
+Socket/node_modules
 Frontend/VersioSocketGuillem/node_modules
 Frontend/VersioSocketJan/node_modules
 Frontend/VersioSocketGuillem/html/.env
