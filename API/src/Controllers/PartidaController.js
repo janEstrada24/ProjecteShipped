@@ -34,7 +34,7 @@ const postPartida = (async (req, res) => {
                     req.body.nom,
                     new Date().toISOString(),
                     req.body.correucreador,
-                    'actiu'
+                    'activa'
                     ];
 
     const query = 'INSERT INTO partida (id, nom, datainici, correucreador, estat) VALUES ($1, $2, $3, $4, $5)';
@@ -50,7 +50,7 @@ const postPartida = (async (req, res) => {
 });
 
 const putDataFinalGuanyadorAndEstatPartida = (async (req, res) => {
-    const values = [req.body.id, new Date().toISOString(), req.body.correuguanyador, 'finalitzada'];
+    const values = [req.params.id, new Date().toISOString(), req.params.correuguanyador, 'finalitzada'];
     const query = 'UPDATE partida SET datafinal = $2, correuguanyador = $3, estat = $4 WHERE id = $1';
 
     client

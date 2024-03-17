@@ -28,7 +28,7 @@ const postVaixell = async (req, res) => {
         });
 }
 
-const getMunicioByPartidaCorreuUsuariAndNumVaixell = async (req, res) => {
+const getMunicioVaixell = async (req, res) => {
     const values = [req.params.idpartida, req.params.correuusuari, req.params.numvaixell];
     const query = "SELECT municio FROM vaixell WHERE idpartida = $1 AND correuusuari = $2 AND numvaixell = $3";
 
@@ -43,7 +43,7 @@ const getMunicioByPartidaCorreuUsuariAndNumVaixell = async (req, res) => {
 }
 
 const putEstatVaixellDestruit = async (req, res) => {
-    const values = [req.body.correuusuari, req.body.idpartida, req.body.numvaixell, 'destruit'];
+    const values = [req.params.correuusuari, req.params.idpartida, req.params.numvaixell, 'destruit'];
     const query = "UPDATE vaixell SET estat = $4 WHERE correuusuari = $1 AND idpartida = $2 AND numvaixell = $3";
 
     client
@@ -57,7 +57,7 @@ const putEstatVaixellDestruit = async (req, res) => {
 }
 
 const sumarMunicio = async (req, res) => {
-    const values = [req.body.correuusuari, req.body.idpartida, req.body.numvaixell];
+    const values = [req.params.correuusuari, req.params.idpartida, req.params.numvaixell];
     const query = "UPDATE vaixell SET municio = municio + 1 WHERE correuusuari = $1 AND idpartida = $2 AND numvaixell = $3";
 
     client
@@ -71,7 +71,7 @@ const sumarMunicio = async (req, res) => {
 }
 
 const restarMunicio = async (req, res) => {
-    const values = [req.body.correuusuari, req.body.idpartida, req.body.numvaixell];
+    const values = [req.params.correuusuari, req.params.idpartida, req.params.numvaixell];
     const query = "UPDATE vaixell SET municio = municio - 1 WHERE correuusuari = $1 AND idpartida = $2 AND numvaixell = $3";
 
     client
@@ -88,7 +88,7 @@ module.exports = {
     getVaixellsByPartidaAndCorreuUsuari,
     postVaixell,
     putEstatVaixellDestruit,
-    getMunicioByPartidaCorreuUsuariAndNumVaixell,
+    getMunicioVaixell,
     sumarMunicio,
     restarMunicio
 };
