@@ -1,10 +1,11 @@
 const client = require("../Database/connection.js");
 
-const getAllParticipants = async (req, res) => {
-    const query = "SELECT * FROM participant";
+const getParticipantsByPartida = async (req, res) => {
+    const values = [req.params.idpartida];
+    const query = "SELECT * FROM participant WHERE idpartida = $1";
 
     client
-        .query(query, (err, result) => {
+        .query(query, values, (err, result) => {
             if (err) {
                 res.status(404).json({ error: "No hi han participants" });
             } else {
@@ -28,6 +29,6 @@ const postParticipant = async (req, res) => {
 }
 
 module.exports = {
-    getAllParticipants,
+    getParticipantsByPartida,
     postParticipant
 };
