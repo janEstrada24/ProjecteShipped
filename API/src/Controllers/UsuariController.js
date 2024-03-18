@@ -6,13 +6,13 @@ const login = async (req, res) => {
     const usuari = await getUsuariByCorreu(req.body.correu);
 
     if (usuari == null || usuari == undefined) {
-        res.status(404).send("Usuari o contrasenya no vàlids");
+        res.status(404).send("Usuari no existent!");
     } else {
         console.log(usuari);
         if (await bcrypt.compare(req.body.contrasenya, usuari.contrasenya)) {
             res.json({ user: usuari });
         } else {
-            res.status(401).send("Password incorrect!");
+            res.status(401).send("Contrasenya incorrecta!");
         }
     }
 };
@@ -32,19 +32,41 @@ const registre = async (req, res) => {
     const query = "INSERT INTO usuari (correu, nom, contrasenya, victories, empats, estat) VALUES($1, $2, $3, $4, $5, $6)";
     const values = [req.body.correu, req.body.nom, hashedPassword, 0, 0, 'actiu'];
 
-    client
-        .query(query, values)
-        .then((result) => res.send("Usuari afegit correctament"))
-        .catch((e) => res.send(e));
+    const existingUser = await getUsuariByCorreuAndNom(req.body.correu, req.body.nom);
+    
+    if (existingUser != null || existingUser != undefined) {
+        res.status(404).send("Usuari ja existent!");
+    } else {
+        client
+            .query(query, values)
+            .then((result) => res.send("Usuari afegit correctament"))
+            .catch((e) => res.send(e));
+    }
 };
 
 function getUsuariByCorreu(correu) {
+    const query = "SELECT * FROM usuari WHERE correu = $1 AND estat = 'actiu'";
+    const values = [correu];
+
     return new Promise((resolve) => {
         client.query(
-            `SELECT *
-            FROM usuari
-            WHERE correu = '${correu}'
-            AND estat = 'actiu'`,
+            query,
+            values,
+            (err, result) => {
+                resolve(result.rows[0]);
+            }
+        );
+    });
+}
+
+function getUsuariByCorreuAndNom(correu, nom) {
+    const query = "SELECT * FROM usuari WHERE correu = $1 OR nom = $2 AND estat = 'actiu'";
+    const values = [correu, nom];
+
+    return new Promise((resolve) => {
+        client.query(
+            query,
+            values,
             (err, result) => {
                 resolve(result.rows[0]);
             }
