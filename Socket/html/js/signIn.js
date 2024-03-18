@@ -1,10 +1,12 @@
+const IP = "172.23.1.129";
+
 const loginAction = async (correu, contrasenya) => {
     const userBody = JSON.stringify({
         correu: correu,
         contrasenya: contrasenya
     });
 
-    const response = await fetch('http://localhost:4000/usuaris/login', {
+    const response = await fetch(`http://${IP}:4000/usuaris/login`, {
         method: 'POST',
         body: userBody,
         headers: {
@@ -20,17 +22,24 @@ const loginAction = async (correu, contrasenya) => {
         const myJson = await response.json();
         console.log("Response from server:");
         console.log(myJson);
+        window.location.href = "http://" + IP + ":3000/MenuPartida/menuPartida.html";
     }
 }
 
 function login() {
     const correu = document.getElementsByTagName("input")[0].value;
     const contrasenya = document.getElementsByTagName("input")[1].value;
-    loginAction(correu, contrasenya);
+    
+    if (correu === "" || contrasenya === "") {
+        alert("Error: És necessari omplir tots els camps!");
+        return;
+    } else {
+        loginAction(correu, contrasenya);
+    }
 }
 
 function navigateToSignUp() {
-    window.location.href = "http://172.23.1.129:3000/SignUp/signUp.html";
+    window.location.href = "http://" + IP + ":3000/SignUp/signUp.html";
 }
 
 window.onload = function start() {
