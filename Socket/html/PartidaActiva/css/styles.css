@@ -1,0 +1,23 @@
+body {
+    width: 100%;
+    height: 100vh;
+    margin: 0;
+    padding: 0;
+}
+
+.vaixells {
+    position: absolute;
+    width: 2%;
+}
+
+.municio {
+    position: absolute;
+    width: 1%;
+    border-radius: 50%;
+}
+
+body {
+    background-image: url('../../Images/PartidaActiva/Fons.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}

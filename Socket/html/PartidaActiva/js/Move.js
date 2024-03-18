@@ -28,7 +28,7 @@ window.onload = function () {
 
     for (let i = 0; i < 10; i++) {
       let barril = document.createElement("img");
-      barril.src = "/Images/barril.png";
+      barril.src = "../../Images/PartidaActiva/barril.png";
       barril.classList.add("barrils");
       barril.style.position = "absolute";
 
@@ -64,7 +64,7 @@ window.onload = function () {
 
     for (let i = 0; i < 10; i++) {
       let meteorit = document.createElement("img");
-      meteorit.src = "/Images/Meteorit.png";
+      meteorit.src = "../../Images/PartidaActiva/Meteorit.png";
       meteorit.classList.add("Meteorit");
       meteorit.style.position = "absolute";
 
@@ -271,7 +271,7 @@ window.onload = function () {
         break;
         case "l":
     let municon = document.createElement("img");
-    municon.src = "/Images/Municio.jpg";
+    municon.src = "../../Images/PartidaActiva/Municio.jpg";
     municon.classList.add("municio");
 
     // Calculate the position of the vaixell in front of the activeImg

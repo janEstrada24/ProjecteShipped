@@ -2,17 +2,23 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Socket.IO chat</title>
+    <title>Sign in</title>
+    <link rel="stylesheet" type="text/css" href="./css/styles.css">
+    <script src="./js/signIn.js"></script>
   </head>
-  <link rel="stylesheet" type="text/css" href="../css/styles.css">
-  <script src="../js/Move.js"></script>
-  <script src="../js/worker.js"></script>
   <body>
-    <img class="vaixells" src="/Images/VaixellBlau.png" alt="vaixell"/><br>
-    <img class="vaixells" src="/Images/VaixellGrocIVermell.png" alt="vaixell"/><br>
-    <img class="vaixells" src="/Images/VaixellLilaIVerd.png" alt="vaixell"/><br>
-    <img class="vaixells" src="/Images/VaixellVerdIBlau.png" alt="vaixell"/><br>
-    <img class="vaixells" src="/Images/VaixellVermellIVerd.png" alt="vaixell"/><br>
+    <h1>Iniciar sessió</h1>
+
+    <label>Correu:
+      <input type="text" name="correu" maxlength="50">
+    </label>
+
+    <br>
+
+    <label>Contrasenya:
+      <input type="password" name="password" maxlength="150">
+    </label>
     
+    <button>Sign in</button>
   </body>
 </html>
