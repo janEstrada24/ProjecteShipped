@@ -18,7 +18,7 @@ app.use("/partides", partidesRoutes);
 app.use("/participants", participantsRoutes);
 app.use("/vaixells", vaixellsRoutes);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 4001;
 
 app.listen(PORT, () => {
   console.log(`🚀 Server listening on port ${PORT}`);
