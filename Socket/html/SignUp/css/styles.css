@@ -1,0 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Marck+Script&display=swap');
+
+body {
+    font-family: 'Marck Script', cursive;
+    background-image: url('../../Images/SignIn/Fons.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    background-image: url('../../Images/SignIn/PergamiEnBlanc.png');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 20%;
+}

@@ -1,10 +1,11 @@
-const loginAction = async (correu, contrasenya) => {
+const registerAction = async (correu, nom, contrasenya) => {
     const userBody = JSON.stringify({
         correu: correu,
+        nom: nom,
         contrasenya: contrasenya
     });
 
-    const response = await fetch('http://localhost:4000/usuaris/login', {
+    const response = await fetch('http://localhost:4000/usuaris/registre', {
         method: 'POST',
         body: userBody,
         headers: {
@@ -25,8 +26,9 @@ const loginAction = async (correu, contrasenya) => {
 
 function login() {
     const correu = document.getElementsByTagName("input")[0].value;
-    const contrasenya = document.getElementsByTagName("input")[1].value;
-    loginAction(correu, contrasenya);
+    const nom = document.getElementsByTagName("input")[1].value;
+    const contrasenya = document.getElementsByTagName("input")[2].value;
+    registerAction(correu, nom, contrasenya);
 }
 
 window.onload = function start() {
