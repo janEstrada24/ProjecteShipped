@@ -29,7 +29,13 @@ function login() {
     loginAction(correu, contrasenya);
 }
 
+function navigateToSignUp() {
+    window.location.href = "http://172.23.1.129:3000/SignUp/signUp.html";
+}
+
 window.onload = function start() {
-    const boto = document.getElementsByTagName("button")[0];
-    boto.addEventListener("click", login);
+    const botoSignIn = document.getElementsByTagName("button")[0];
+    const botoSignUp = document.getElementsByTagName("button")[1];
+    botoSignIn.addEventListener("click", login);
+    botoSignUp.addEventListener("click", navigateToSignUp);
 }
