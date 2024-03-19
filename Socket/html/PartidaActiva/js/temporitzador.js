@@ -1,12 +1,12 @@
 class Temporitzador {
     constructor() {
-        this.tiempo = 0;
+        this.temps = 300;
         this.interval = null;
     }
 
     iniciar() {
         this.interval = setInterval(() => {
-            this.tiempo++;
+            this.temps--;
             this.mostrarTemps();
         }, 1000);
     }
@@ -16,8 +16,12 @@ class Temporitzador {
     }
 
     mostrarTemps() {
-        let minuts = Math.floor(this.tiempo / 60);
-        let segons = this.tiempo % 60;
+        let minuts = Math.floor(this.temps / 60);
+        let segons = this.temps % 60;
+
+        if (segons < 10) {
+            segons = '0' + segons;
+        }
         document.getElementById('temps').innerHTML = minuts + ':' + segons;
     }
 }

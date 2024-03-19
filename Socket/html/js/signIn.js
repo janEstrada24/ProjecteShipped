@@ -1,4 +1,4 @@
-const IP = "192.168.43.92";
+const IP = "172.23.1.129";
 
 const loginAction = async (correu, contrasenya) => {
     const userBody = JSON.stringify({
@@ -22,7 +22,6 @@ const loginAction = async (correu, contrasenya) => {
         const myJson = await response.json();
         console.log("Response from server:");
         console.log(myJson);
-        localStorage.setItem('correu', correu);
         window.location.href = "http://" + IP + ":3000/MenuPartida/menuPartida.html";
     }
 }
