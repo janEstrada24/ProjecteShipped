@@ -1,3 +1,4 @@
+const { response } = require("express");
 const client = require("../Database/connection.js");
 const { v4: uuidv4 } = require('uuid');
 
@@ -44,7 +45,7 @@ const postPartida = (async (req, res) => {
             if (err) {
                 res.status(404).json(err);
             } else {
-                res.status(200).json({ message: "Partida creada correctament"});
+                res.status(200).json({ partida: values });
             }
         });
 });
