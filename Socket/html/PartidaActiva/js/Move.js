@@ -5,7 +5,9 @@ window.onload = function () {
   let activeImg = 0;
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
-
+  let temporitzador = new Temporitzador();
+  temporitzador.iniciar();
+  
   const webSocket = new WebSocket("ws://172.23.2.211:3000");
 
   /**
