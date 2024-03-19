@@ -11,6 +11,8 @@ app.use(express.static(path.join(__dirname, "/js")));
 const wss = new WebSocket.Server({ server });
 
 wss.on("connection", (ws) => {
+    const numJugadors = 0;
+
     ws.on("message", function incoming(message) {
         try {
             const data = JSON.parse(message);
@@ -22,10 +24,17 @@ wss.on("connection", (ws) => {
                         client.send(JSON.stringify(data));
                     });
                 }
-                if (data.numJugadors) {
+                if (data.veureJugadors) {
                     wss.clients.forEach(function each(client) {
-                        console.log("Numero de jugadors: " + data.numJugadors);
-                        client.send(JSON.stringify(data));
+                        console.log("Numero de jugadors: " + numJugadors);
+                        client.send(JSON.stringify({ numJugadors: numJugadors}));
+                    });
+                }
+                if (data.sumarJugador) {
+                    wss.clients.forEach(function each(client) {
+                        numJugadors++;
+                        console.log("Jugador sumat: " + numJugadors);
+                        client.send(JSON.stringify({ numJugadors: numJugadors}));
                     });
                 }
             } 

@@ -1,5 +1,6 @@
 const IP = "172.23.1.129";
 const webSocket = new WebSocket("ws://" + IP + ":3000");
+let numJugadors = 0;
 
 webSocket.onopen = function (event) {
     console.log("Connection established");
@@ -32,22 +33,24 @@ function CrearPartida() {
     const nom = document.getElementsByTagName("input")[0].value;
     const correucreador = localStorage.getItem('correu');
     PostPartida(nom, correucreador);
-    
-    webSocket.send(
-        JSON.stringify({
-            numJugadors: "Number"
-        })
-      );
+    webSocket.send(JSON.stringify({ "sumarJugador": "sumarJugador" }));
 }
+
 window.onload = function start() {
     const boto = document.getElementsByTagName("button")[0];
     boto.addEventListener("click", CrearPartida);
 
+    webSocket.send(JSON.stringify({ "veureJugadors": "veureJugadors" }));
+
     webSocket.onmessage = function (event) {
         const message = JSON.parse(event.data);
 
-        if (message.numJugadors && message.numJugadors === 2) {        
-            window.location.href = "http://" + IP + ":3000/MenuPartida/menuPartida.html";
+        if (message.numJugadors) { 
+            numJugadors = message.numJugadors;
+            
+            if (numJugadors === 2) {
+                window.location.href = "http://" + IP + ":3000/MenuPartida/menuPartida.html";
+            }     
         }
     }
 }
