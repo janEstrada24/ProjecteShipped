@@ -23,7 +23,7 @@ const PostPartida= async (nom, correucreador) => {
 }
 function CrearPartida() {
     const nom = document.getElementsByTagName("input")[0].value;
-    const correucreador = "guillembarris@gmail.com";
+    const correucreador = localStorage.getItem('correu');
     PostPartida(nom, correucreador);
 }
 window.onload = function start() {

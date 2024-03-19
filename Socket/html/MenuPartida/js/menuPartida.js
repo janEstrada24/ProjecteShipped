@@ -1,4 +1,4 @@
-const IP = "172.23.2.211";
+const IP = "192.168.43.92";
 function crearPartida() {
    window.location.href = "http://" + IP + ":3000/FormulariPartida/formulariPartida.html";
 }
