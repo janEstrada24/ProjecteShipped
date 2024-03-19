@@ -1,4 +1,4 @@
-const IP = "172.23.1.129";
+const IP = "172.23.2.211";
 
 const loginAction = async (correu, contrasenya) => {
     const userBody = JSON.stringify({
