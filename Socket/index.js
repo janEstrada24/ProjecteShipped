@@ -15,12 +15,20 @@ wss.on("connection", (ws) => {
         try {
             const data = JSON.parse(message);
 
-            if (data && data.key) {
-                wss.clients.forEach(function each(client) {
-                    console.log("Message from server: " + data.key);
-                    client.send(JSON.stringify(data));
-                });
-            }
+            if (data) {
+                if (data.key) {
+                    wss.clients.forEach(function each(client) {
+                        console.log("Message from server: " + data.key);
+                        client.send(JSON.stringify(data));
+                    });
+                }
+                if (data.numJugadors) {
+                    wss.clients.forEach(function each(client) {
+                        console.log("Numero de jugadors: " + data.numJugadors);
+                        client.send(JSON.stringify(data));
+                    });
+                }
+            } 
         } catch (error) {
             console.error("Error to process message: " + error);
         }

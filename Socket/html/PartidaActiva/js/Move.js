@@ -6,7 +6,7 @@ window.onload = function () {
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
   
-  const webSocket = new WebSocket("ws://192.168.43.143:3000");
+  const webSocket = new WebSocket("ws://172.23.1.129:3000");
 
   /**
    * Afegirem barrils en una posicio aleatoria de la pantalla
