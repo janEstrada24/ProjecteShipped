@@ -1,3 +1,12 @@
+const IP = "172.23.1.129";
+const webSocket = new WebSocket("ws://" + IP + ":3000");
+let numJugadors = 0;
+
+function unirsePartida() {
+  window.location.href = "http://" + IP + ":3000/PartidaActiva/partidaActiva.html";
+  webSocket.send(JSON.stringify({ sumarJugador: "sumarJugador" }));
+}
+
 const GetPartida = async () => {
   const response = await fetch(
     "http://localhost:4000/partides/PartidesActives/",
@@ -16,38 +25,33 @@ const GetPartida = async () => {
     console.log("Response from server:");
     console.log(myJson);
 
-    // Crear tabla
     let table = document.createElement("table");
 
-    // Crear encabezado de tabla
     let thead = document.createElement("thead");
     let headerRow = document.createElement("tr");
     let thNom = document.createElement("th");
     thNom.textContent = "Nom Partida";
     headerRow.appendChild(thNom);
 
-    // Crear encabezado para botones
-    let thButton = document.createElement("th");
-    thButton.textContent = "Botons";
-    headerRow.appendChild(thButton);
     let thDataInici = document.createElement("th");
     thDataInici.textContent = "Data Inici";
     headerRow.appendChild(thDataInici);
     let thCorreuCreador = document.createElement("th");
     thCorreuCreador.textContent = "Correu Creador";
     headerRow.appendChild(thCorreuCreador);
+    let thButton = document.createElement("th");
+    thButton.textContent = "Botons";
+    headerRow.appendChild(thButton);
 
     thead.appendChild(headerRow);
     table.appendChild(thead);
 
-    // Crear cuerpo de tabla
     let tbody = document.createElement("tbody");
     myJson.forEach((obj) => {
       let row = document.createElement("tr");
 
-      // Crear columna de nombres
       let tdNom = document.createElement("td");
-      tdNom.textContent = obj.nom; // Asegúrate de que 'nom' es la propiedad correcta en tu objeto
+      tdNom.textContent = obj.nom; 
       row.appendChild(tdNom);
       let tdDataInici = document.createElement("td");
       tdDataInici.textContent = obj.datainici;
@@ -56,10 +60,9 @@ const GetPartida = async () => {
       tdCorreuCreador.textContent = obj.correucreador;
       row.appendChild(tdCorreuCreador);
       
-      // Crear columna de botones
       let tdButton = document.createElement("td");
       let button = document.createElement("button");
-      button.textContent = "Botón";
+      button.textContent = "Unir-se";
       tdButton.appendChild(button);
       row.appendChild(tdButton);
 
@@ -67,10 +70,29 @@ const GetPartida = async () => {
     });
     table.appendChild(tbody);
 
-    // Añadir tabla al cuerpo del documento
     document.body.appendChild(table);
   }
 };
+
 window.onload = function start() {
+  webSocket.send(JSON.stringify({ veureJugadors: "veureJugadors" }));
+
+  webSocket.onmessage = function (event) {
+    const message = JSON.parse(event.data);
+
+    if (message.numJugadors) { 
+        numJugadors = message.numJugadors;
+        console.log(typeof numJugadors);
+        if (numJugadors >= 2) {
+            window.location.href = "http://" + IP + ":3000/MenuPartida/menuPartida.html";
+        }     
+    }
+  }
+
   GetPartida();
+
+  let botons = document.getElementsByTagName("button");
+  for (let i = 0; i < botons.length; i++) {
+    botons[i].addEventListener("click", unirsePartida);
+  }
 };

@@ -33,14 +33,14 @@ function CrearPartida() {
     const nom = document.getElementsByTagName("input")[0].value;
     const correucreador = localStorage.getItem('correu');
     PostPartida(nom, correucreador);
-    webSocket.send(JSON.stringify({ "sumarJugador": "sumarJugador" }));
+    webSocket.send(JSON.stringify({ sumarJugador: "sumarJugador" }));
 }
 
 window.onload = function start() {
     const boto = document.getElementsByTagName("button")[0];
     boto.addEventListener("click", CrearPartida);
 
-    webSocket.send(JSON.stringify({ "veureJugadors": "veureJugadors" }));
+    webSocket.send(JSON.stringify({ veureJugadors: "veureJugadors" }));
 
     webSocket.onmessage = function (event) {
         const message = JSON.parse(event.data);
