@@ -49,4 +49,14 @@ CREATE TABLE Vaixell (
     PRIMARY KEY (CorreuUsuari, IDPartida, NumVaixell)
 );
 
+-- Crear taula PosicioVaixell
+CREATE TABLE PosicioVaixell (
+    IDVaixell VARCHAR(100),
+    IDUsuari VARCHAR(100),
+    DataIniciPartida TIMESTAMP,
+    x INTEGER,
+    y INTEGER,
+    PRIMARY KEY (IDVaixell, IDUsuari)
+);
+
 INSERT INTO usuari (correu, nom, contrasenya, victories, empats, estat) VALUES('EMPAT', 'EMPAT', '$2b$10$R9lrs.Swe.j0vKDVIgV24OLtUdBlLZY2t1KEipHQVqpqKly70vlqu', 0, 0, 'inactiu')
