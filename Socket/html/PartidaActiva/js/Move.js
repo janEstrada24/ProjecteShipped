@@ -5,6 +5,7 @@ window.onload = function () {
   let activeImg = 0;
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
+  let now;
   
   const webSocket = new WebSocket("ws://172.23.1.129:3000");
 
@@ -18,197 +19,62 @@ window.onload = function () {
    */
   var positions = [];
 
-  function addBarrils() {
-    const windowWidth = window.innerWidth * 0.5;
-    const windowHeight = window.innerHeight * 0.9;
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    var randomX;
-    var randomY;
-
-    for (let i = 0; i < 10; i++) {
-      let barril = document.createElement("img");
-      barril.src = "../../Images/PartidaActiva/barril.png";
-      barril.classList.add("barrils");
-      barril.style.position = "absolute";
-
-      while (true) {
-        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
-
-        if (
-          positions.every(
-            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
-          )
-        ) {
-          break;
-        }
+  const PostPosicioVaixell= async (x, y) => {
+    const myBody = JSON.stringify({
+        x: x,
+        y: y
+    });
+    const response = await fetch('http://localhost:4000/posicionsVaixells/postPosicioVaixell', {
+          method: 'POST',
+          body: myBody,
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      if (!response.ok) {
+          const errorMessage = await response.text();
+          alert("Error: " + errorMessage);
       }
+      else {
+          const myJson = await response.json();
 
-      positions.push({ x: randomX, y: randomY });
+          webSocket.send(JSON.stringify({ key: "PosicioVaixell", x: x, y: y }));
 
-      barril.style.left = randomX + "px";
-      barril.style.top = randomY + "px";
-      document.body.appendChild(barril);
-    }
-    barrils = Array.from(document.getElementsByClassName("barrils"));
+          console.log("Response from server:");
+          console.log(myJson);
+      }
   }
 
   function addMeteorit() {
     const windowWidth = window.innerWidth * 0.5;
     const windowHeight = window.innerHeight * 0.9;
-    const centerX = window.innerWidth / 2;
-    const centerY = window.innerHeight / 2;
-    var randomX;
-    var randomY;
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 1; i++) {
       let meteorit = document.createElement("img");
       meteorit.src = "../../Images/PartidaActiva/Meteorit.png";
       meteorit.classList.add("Meteorit");
       meteorit.style.position = "absolute";
 
-      while (true) {
-        randomX = centerX - windowWidth / 2 + Math.random() * windowWidth;
-        randomY = centerY - windowHeight / 2 + Math.random() * windowHeight;
-
-        if (
-          positions.every(
-            (pos) => Math.hypot(pos.x - randomX, pos.y - randomY) >= 100
-          )
-        ) {
-          break;
-        }
-      }
-
-      positions.push({ x: randomX, y: randomY });
-      randomWidth = 2 + Math.random() * 2;
-      meteorit.style.left = randomX + "px";
-      meteorit.style.top = randomY + "px";
+      randomWidth = 3;
+      meteorit.style.left = windowWidth / 2 + "px";
+      meteorit.style.top = windowHeight / 2 + "px";
       meteorit.style.width = `${randomWidth}%`;
       document.body.appendChild(meteorit);
     }
     meteorits = Array.from(document.getElementsByClassName("Meteorit"));
   }
 
-  function checkTouchBarrils() {
-    console.log("Check touch barrils");
-    vaixells = Array.from(document.getElementsByClassName("vaixells"));
-    barrils = Array.from(document.getElementsByClassName("barrils"));
+  function checkTime() {
+    now = new Date().getTime();
 
-    let vaixellRect;
-    let barrilRect;
-
-    for (let vaixell of vaixells) {
-      vaixellRect = vaixell.getBoundingClientRect();
-
-      for (let barril of barrils) {
-        barrilRect = barril.getBoundingClientRect();
-
-        if (
-          vaixellRect.x < barrilRect.x + barrilRect.width &&
-          vaixellRect.x + vaixellRect.width > barrilRect.x &&
-          vaixellRect.y < barrilRect.y + barrilRect.height &&
-          vaixellRect.y + vaixellRect.height > barrilRect.y
-        ) {
-          barril.remove();
-          barrils.splice(barrils.indexOf(barril), 1);
-          console.log("Barril eliminat");
+    if (last) {
+        if (now - last > 500) {
+            last = now;
         }
-      }
-    }
-  }
-  function checkTouchMeteorit() {
-    console.log("Check touch meteorit");
-    vaixells = Array.from(document.getElementsByClassName("vaixells"));
-    Meteorit = Array.from(document.getElementsByClassName("Meteorit"));
-
-    let municio = Array.from(document.getElementsByClassName("municio"));
-
-    for (let meteorit of Meteorit) {
-      let meteoritRect = meteorit.getBoundingClientRect();
-
-      for (let municioItem of municio) {
-        let municioRect = municioItem.getBoundingClientRect();
-        if (
-          municioRect.left < meteoritRect.right &&
-          municioRect.right > meteoritRect.left &&
-          municioRect.top < meteoritRect.bottom &&
-          municioRect.bottom > meteoritRect.top
-        ) {
-          municioItem.parentNode.removeChild(municioItem);
-        }
-      }
-
-      for (let vaixell of vaixells) {
-        let vaixellRect = vaixell.getBoundingClientRect();
-
-        if (
-          vaixellRect.left < meteoritRect.right &&
-          vaixellRect.right > meteoritRect.left &&
-          vaixellRect.top < meteoritRect.bottom &&
-          vaixellRect.bottom > meteoritRect.top
-        ) {
-          // Collision detected, remove the vaixell
-          vaixell.parentNode.removeChild(vaixell);
-          return false;
-        }
-      }
     }
 
-    return true;
+    last = now;
   }
-  function checkTouchVaixell() {
-    var vaixells = Array.from(document.getElementsByClassName("vaixells"));
-    var municio = Array.from(document.getElementsByClassName("municio"));
-
-    vaixells.forEach(function (vaixell, i) {
-      municio.forEach(function (muni, j) {
-        var vaixellRect = vaixell.getBoundingClientRect();
-        var muniRect = muni.getBoundingClientRect();
-
-        if (
-          vaixellRect.x < muniRect.x + muniRect.width &&
-          vaixellRect.x + vaixellRect.width > muniRect.x &&
-          vaixellRect.y < muniRect.y + muniRect.height &&
-          vaixellRect.y + vaixellRect.height > muniRect.y
-        ) {
-          // Si se tocan, eliminarlos del DOM y de los arrays
-          vaixell.parentNode.removeChild(vaixell);
-          muni.parentNode.removeChild(muni);
-          vaixells.splice(i, 1);
-          municio.splice(j, 1);
-        }
-      });
-    });
-  }
-  function moveMeteorits() {
-    const meteorits = Array.from(document.getElementsByClassName("Meteorit"));
-
-    meteorits.forEach((meteorit) => {
-      const meteoritWidth = meteorit.offsetWidth;
-      const windowWidth = window.innerWidth;
-      const meteoritWidthPercentage = (meteoritWidth / windowWidth) * 100;
-
-      // Solo mover meteoritos con un ancho entre 2% y 3%
-      if (meteoritWidthPercentage >= 2 && meteoritWidthPercentage <= 3) {
-        const speed = 1;
-        const currentLeft = meteorit.offsetLeft;
-
-        let newLeft = currentLeft + speed;
-
-        if (newLeft > windowWidth) {
-          newLeft = -meteoritWidth;
-        }
-
-        meteorit.style.left = newLeft + "px";
-      }
-    });
-  } setInterval(moveMeteorits, 100);
-
-  const intervalBarrils = setInterval(checkTouchBarrils, 100);
-  const intervalMeteorit = setInterval(checkTouchMeteorit, 100);
-  const intervalVaixell = setInterval(checkTouchVaixell, 100);
 
   function animate() {
     vaixells.forEach((vaixell, index) => {
@@ -235,15 +101,17 @@ window.onload = function () {
 
       vaixell.style.left = currentLeft + "px";
       vaixell.style.top = currentTop + "px";
+
+      PostPosicioVaixell(currentLeft, currentTop);
     });
 
     requestAnimationFrame(animate);
   }
 
   animate();
-  addBarrils();
   addMeteorit();
   moveMeteorits();
+  checkTime();
 
   window.addEventListener("keydown", function (event) {
     if (event.key >= "1" && event.key <= "5") {
@@ -257,7 +125,7 @@ window.onload = function () {
           value: event.key,
           activeImg: activeImg,
         })
-      ); // Enviar el número presionado y activeImg al socket
+      );
     }
 
     switch (event.key.toLowerCase()) {
