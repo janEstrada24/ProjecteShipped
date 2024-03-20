@@ -12,9 +12,12 @@ const getPosicionsVaixells = async (req, res) => {
 
 const postPosicioVaixell = async (req, res) => {
 
+    const uuidVaixell = uuidv4();
+    const uuidUsuari = uuidv4();
+
     const values = [
-        req.body.idvaixell,
-        req.body.idusuari,
+        uuidVaixell,
+        uuidUsuari,
         new Date().toISOString(),
         req.body.x,
         req.body.y
@@ -27,7 +30,7 @@ const postPosicioVaixell = async (req, res) => {
             if (err) {
                 res.status(404).json(err);
             } else {
-                res.status(200).json({ message: "Vaixell afegit correctament" });
+                res.status(200).json({ posicioVaixell: values });
             }
         });
 }
