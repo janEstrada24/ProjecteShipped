@@ -1,10 +1,12 @@
 import psycopg2
 import csv
+import os
 
 
 table_name = 'usuari'
-output_file = 'usuari.csv'
- # No need to encode the password
+output_dir = 'python'
+output_file = os.path.join(output_dir, 'prova.csv')
+
 conn = psycopg2.connect(
     host='localhost',
     database='admin',
