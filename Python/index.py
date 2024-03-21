@@ -12,7 +12,7 @@ def get_unique_csv_name():
 
     
 
-table_name = 'usuari'
+table_name = 'posiciovaixell'
 output_dir = 'python'
 output_file = get_unique_csv_name()
 
@@ -34,7 +34,11 @@ with open(output_file, 'w') as csv_file:
     writer.writerow(column_names)
     for row in cur:
         writer.writerow(row)
+query = f"DELETE FROM {table_name}"
+cur.execute(query)
+conn.commit()
 cur.close()
 conn.close()
+
 
 print(f'CSV file created at {output_file}')
