@@ -12,12 +12,9 @@ const getPosicionsVaixells = async (req, res) => {
 
 const postPosicioVaixell = async (req, res) => {
 
-    const uuidVaixell = uuidv4();
-    const uuidUsuari = uuidv4();
-
     const values = [
-        uuidVaixell,
-        uuidUsuari,
+        req.body.idvaixell,
+        req.body.idusuari,
         new Date().toISOString(),
         req.body.x,
         req.body.y
