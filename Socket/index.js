@@ -17,7 +17,7 @@ wss.on("connection", (ws) => {
     let numVaixells = 2;
     let arrayX = [];
     let arrayY = [];
-    let idsUsuaris = [];
+    let idsVaixells = [];
     ws.on("message", function incoming(message) {
         try {
             const data = JSON.parse(message);
@@ -35,39 +35,37 @@ wss.on("connection", (ws) => {
                     wss.clients.forEach(function each(client) {
                         numJugadors++;
                         console.log("Jugador sumat: " + numJugadors);
-                        idsUsuaris.push(uuidv4());
                         
                         if (numJugadors == 2) {
                             client.send(JSON.stringify({ numJugadors: numJugadors}));
 
                             /**
-                             * Assignem una posicio aleatoria a cada vaixell segons el numero
-                             * de vaixells que volem que hi hagi a la pantalla. Aixo fa que tots
-                             * els usuaris d'una partida vegin un vaixell en concret sempre a 
-                             * la mateixa posicio.
+                             * Segons el numero de vaixells que volem que hi hagi a la pantalla, es crea per cada vaixell
+                             * una UUID aleatoria que després hauran d'obtenir els usuaris.
+                             * 
+                             * Per altra banda, assignem una posicio aleatoria a cadascun d'aquests vaixells. Aixo fa 
+                             * que tots els usuaris d'una partida vegin un vaixell en concret sempre a la mateixa posicio.
                              */ 
                             for (let k = 0; k < numVaixells; k++) {
+                                idsVaixells.push(uuidv4());
                                 const x = Math.floor(Math.random() * data.windowWidth);
                                 const y = Math.floor(Math.random() * data.windowHeight);
                                 arrayX.push(x);
                                 arrayY.push(y);
                             }
 
-                            for (let i = 0; i < numJugadors; i++) {
-                                for (let k = 0; k < numVaixells; k++) {
-                                    axios.post('http://' + process.env.SERVER_ADDRES + ':4000/posicionsVaixells/postPosicioVaixell', 
-                                    {
-                                        idVaixell: uuidv4(),
-                                        idUsuari: idsUsuaris[i],
-                                        x: arrayX[k],
-                                        y: arrayY[k]
-                                    });
-                                }
-                            }
-
                         }
                     });
                 }
+
+                if (data.demanarIDUsuari) {
+                    wss.emit("idUsuari", JSON.stringify(uuidv4()));
+                }
+
+                if (data.demanarIDsVaixells) {
+                    wss.emit("idsVaixells", JSON.stringify(idsVaixells));
+                }
+
             }
         } catch (error) {
             console.error("Error to process message: " + error);

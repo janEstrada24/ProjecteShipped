@@ -6,7 +6,7 @@ webSocket.onopen = function (event) {
 };
 
 function CrearPartida() {
-    webSocket.send(JSON.stringify({ sumarJugador: "sumarJugador" }));
+    webSocket.send(JSON.stringify({ sumarJugador: "sumarJugador", windowHeight: window.innerHeight, windowWidth: window.innerWidth }));
 }
 
 window.onload = function start() {

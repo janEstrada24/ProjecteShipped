@@ -6,7 +6,8 @@ window.onload = function () {
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
   let now;
-  
+  let idUsuari;
+  let idsVaixells;
   const webSocket = new WebSocket("ws://172.23.1.129:3000");
 
   /**
@@ -109,7 +110,6 @@ window.onload = function () {
 
   animate();
   addMeteorit();
-  moveMeteorits();
   checkTime();
 
   window.addEventListener("keydown", function (event) {
@@ -190,22 +190,39 @@ window.onload = function () {
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
   });
 
+
+  
+  webSocket.send(JSON.stringify({ demanarIDUsuari: "demanarIDUsuari" }));
+  webSocket.send(JSON.stringify({ demanarIDsVaixells: "demanarIDsVaixells" }));
+
   webSocket.onmessage = function (event) {
     const message = JSON.parse(event.data);
-    const key = message.key;
 
-    switch (key) {
-      case "A":
-        degrees[activeImg] -= 5;
-        break;
-      case "D":
-        degrees[activeImg] += 5;
-        break;
-      case "Number":
-        activeImg = message.activeImg;
-        break;
+    if (message.key) {
+      const key = message.key;
+      switch (key) {
+        case "A":
+          degrees[activeImg] -= 5;
+          break;
+        case "D":
+          degrees[activeImg] += 5;
+          break;
+        case "Number":
+          activeImg = message.activeImg;
+          break;
+      }
+
+      vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
     }
 
-    vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
+    if (message.idUsuari) {
+      idUsuari = message.idUsuari;
+      console.log("ID usuari: " + idUsuari);
+    }
+
+    if (message.idsVaixells) {
+      idsVaixells = message.idsVaixells;
+      console.log("IDs vaixells: " + idsVaixells);
+    }
   };
 };
