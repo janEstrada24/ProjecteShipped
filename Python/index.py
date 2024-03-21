@@ -2,10 +2,20 @@ import psycopg2
 import csv
 import os
 
+def get_unique_csv_name():
+    i = 1
+    while True:
+        output_file = f'{output_dir}/prova{i}.csv'
+        if not os.path.exists(output_file):
+            return output_file
+        i += 1
+
+    
 
 table_name = 'usuari'
 output_dir = 'python'
-output_file = os.path.join(output_dir, 'prova.csv')
+output_file = get_unique_csv_name()
+
 
 conn = psycopg2.connect(
     host='localhost',
