@@ -102,7 +102,6 @@ window.onload = function () {
       vaixell.style.left = currentLeft + "px";
       vaixell.style.top = currentTop + "px";
 
-      PostPosicioVaixell(currentLeft, currentTop);
     });
 
     requestAnimationFrame(animate);
