@@ -1,9 +1,10 @@
 window.onload = function () {
+  const IP = "172.23.1.129";
   let now;
   let last;
   let idUsuari;
   let arrayVaixells = [];
-  const webSocket = new WebSocket("ws://172.23.1.129:3000");
+  const webSocket = new WebSocket("ws://" + IP + ":3000");
 
   let vaixells = [];
   let degrees = [];
@@ -22,13 +23,14 @@ window.onload = function () {
   var positions = [];
 
   const PostPosicioVaixell= async (idVaixell, idUsuari, x, y) => {
+    console.log("PostPosicioVaixell");
     const myBody = JSON.stringify({
         idvaixell: idVaixell,
         idusuari: idUsuari,
         x: x,
         y: y
     });
-    const response = await fetch('http://localhost:4000/posicionsVaixells/postPosicioVaixell', {
+    const response = await fetch('http://' + IP + ':4000/posicionsVaixells/postPosicioVaixell', {
           method: 'POST',
           body: myBody,
           headers: {
@@ -53,12 +55,16 @@ window.onload = function () {
     now = new Date().getTime();
 
     if (last) {
-        if (now - last >= 500) {
+        if (now - last >= 1) {
+            for (let i = 0; i < vaixells.length; i++) {
+              PostPosicioVaixell(arrayVaixells[i].idVaixell, idUsuari, vaixells[i].offsetLeft, vaixells[i].offsetTop);
+            }
             last = now;
         }
     }
 
     last = now;
+    requestAnimationFrame(checkTime);
   }
 
   function animate() {

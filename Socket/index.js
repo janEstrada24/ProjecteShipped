@@ -34,33 +34,31 @@ wss.on("connection", (ws) => {
             if (data) {
                 if (data.key) {
                     wss.clients.forEach(function each(client) {
-                        console.log("Message from server: " + data.key);
                         client.send(JSON.stringify(data));
                     });
                 }
-                if (data.sumarJugador
-                    && data.windowHeight && data.windowWidth) {
-                    
-                    wss.clients.forEach(function each(client) {
-                        numJugadors++;
-                        console.log("Jugador sumat: " + numJugadors);
-                        const idJugador = uuidv4();
-                        idsUsuaris.push(idJugador);
+                if (data.sumarJugador) {
+                    numJugadors++;
+                    console.log("Jugador sumat: " + numJugadors);
 
-                        var x = 100;
-                        var y = 200;
+                    if (numJugadors == 2) {
+                        wss.clients.forEach(function each(client) {
+                            const idJugador = uuidv4();
+                            idsUsuaris.push(idJugador);
 
-                        vaixells.push({
-                            idVaixell: uuidv4(),
-                            idJugador: idJugador,
-                            x: x,
-                            y: y
+                            var x = 100;
+                            var y = 100;
+
+                            vaixells.push({
+                                idVaixell: uuidv4(),
+                                idJugador: idJugador,
+                                x: x,
+                                y: y
+                            });
+
+                                client.send(JSON.stringify({ numJugadors: numJugadors}));
                         });
-
-                        if (numJugadors == 2) {
-                            client.send(JSON.stringify({ numJugadors: numJugadors}));
-                        }
-                    });
+                    }
                 }
 
                 if (data.demanarIDUsuari) {
