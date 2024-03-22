@@ -20,7 +20,7 @@ const postPosicioVaixell = async (req, res) => {
         req.body.y
     ];
 
-    const query = 'INSERT INTO posiciovaixell (idvaixell, idusuari, datainicipartida, x, y) VALUES ($1, $2, $3, $4, $5)';
+    const query = 'INSERT INTO posiciovaixell (idvaixell, idusuari, datatempspartida, x, y) VALUES ($1, $2, $3, $4, $5)';
 
     client
         .query(query, values, (err, result) => {
