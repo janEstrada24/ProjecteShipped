@@ -12,15 +12,21 @@ app.use(express.static(path.join(__dirname, "/js")));
 
 const wss = new WebSocket.Server({ server });
 
+const numVaixells = 2;
 let numJugadors = 0;
-let numVaixells = 2;
 let partida = [];
 let vaixells = [];
+let idsUsuaris = [];
+let idsVaixells = [];
 let arrayX = [];
 let arrayY = [];
-let idsUsuaris = [];
 
 wss.on("connection", (ws) => {
+
+    for (let i = 0; i < numVaixells; i++) {
+        idsVaixells.push(uuidv4());
+    }
+
     ws.on("message", function incoming(message) {
         try {
             const data = JSON.parse(message);
@@ -41,45 +47,25 @@ wss.on("connection", (ws) => {
                         const idJugador = uuidv4();
                         idsUsuaris.push(idJugador);
 
-                        for (let k = 0; k < numVaixells; k++) {
-                            var x = "100px";
-                            var y;
+                        var x = "100px";
+                        var y = "200px";
 
-                            if (k == 0) {
-                                y = "100px";
-                            } else {
-                                y = "200px";
-                            }
-
-                            vaixells.push({
-                                idVaixell: uuidv4(),
-                                idJugador: idJugador,
-                                x: x,
-                                y: y
-                            });
-                        }
+                        vaixells.push({
+                            idVaixell: uuidv4(),
+                            idJugador: idJugador,
+                            x: x,
+                            y: y
+                        });
 
                         if (numJugadors == 2) {
                             client.send(JSON.stringify({ numJugadors: numJugadors}));
-                            client.send(JSON.stringify({ vaixells: vaixells}));
-
-                            /*for (let i = 0; i < numJugadors; i++) {
-                                for (let k = 0; k < numVaixells; k++) {
-                                    const x = Math.floor(Math.random() * data.windowWidth);
-                                    const y = Math.floor(Math.random() * data.windowHeight);
-                                    arrayX.push(x);
-                                    arrayY.push(y);
-                                }
-                            }
-                            wss.emit("idsVaixells", JSON.stringify(idsVaixells));*/
-
                         }
                     });
                 }
 
                 if (data.demanarIDUsuari) {
                     console.log("ID usuari: " + idsUsuaris[0]);
-                    ws.emit("idusuari", JSON.stringify({ idusuari: idsUsuaris[0] }));
+                    ws.send(JSON.stringify({ idusuari: idsUsuaris[0] }));
                     idsUsuaris.splice(0, 1);
                 }
 
@@ -91,7 +77,7 @@ wss.on("connection", (ws) => {
                      * Per altra banda, assignem una posicio aleatoria a cadascun d'aquests vaixells. Aixo fa 
                      * que tots els usuaris d'una partida vegin un vaixell en concret sempre a la mateixa posicio.
                      */ 
-                    ws.emit("vaixells", JSON.stringify({ vaixells: vaixells }));
+                    ws.send(JSON.stringify({ vaixells: vaixells }));
                     console.log(vaixells);
                 }
 
