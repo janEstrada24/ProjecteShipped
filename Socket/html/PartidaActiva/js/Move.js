@@ -6,8 +6,9 @@ window.onload = function () {
   let degrees = new Array(vaixells.length).fill(0);
   let barrils = Array.from(document.getElementsByClassName("barrils"));
   let now;
+  let last;
   let idUsuari;
-  let idsVaixells;
+  let arrayVaixells = [];
   const webSocket = new WebSocket("ws://172.23.1.129:3000");
 
   /**
@@ -20,8 +21,10 @@ window.onload = function () {
    */
   var positions = [];
 
-  const PostPosicioVaixell= async (x, y) => {
+  const PostPosicioVaixell= async (idVaixell, idUsuari, x, y) => {
     const myBody = JSON.stringify({
+        idvaixell: idVaixell,
+        idusuari: idUsuari,
         x: x,
         y: y
     });
@@ -183,20 +186,22 @@ window.onload = function () {
 
       municon.style.left = municioLeft + "px";
       municon.style.top = municioTop + "px";
-    }, 1000 / 60); // Ajustar la velocidad de movimiento
+    }, 1000 / 60);
     break;
     }
 
     vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
   });
 
-
-  
-  webSocket.send(JSON.stringify({ demanarIDUsuari: "demanarIDUsuari" }));
-  webSocket.send(JSON.stringify({ demanarIDsVaixells: "demanarIDsVaixells" }));
+  webSocket.onopen = function (event) {
+    console.log("Connection established");
+    webSocket.send(JSON.stringify({ demanarIDUsuari: "demanarIDUsuari" }));
+    webSocket.send(JSON.stringify({ demanarVaixells: "demanarVaixells" }));
+  }
 
   webSocket.onmessage = function (event) {
     const message = JSON.parse(event.data);
+    console.log(message);
 
     if (message.key) {
       const key = message.key;
@@ -215,14 +220,14 @@ window.onload = function () {
       vaixells[activeImg].style.transform = `rotate(${degrees[activeImg]}deg)`;
     }
 
-    if (message.idUsuari) {
-      idUsuari = message.idUsuari;
+    if (message.idusuari) {
+      idUsuari = message.idusuari;
       console.log("ID usuari: " + idUsuari);
     }
 
-    if (message.idsVaixells) {
-      idsVaixells = message.idsVaixells;
-      console.log("IDs vaixells: " + idsVaixells);
+    if (message.vaixells) {
+      arrayVaixells = message.vaixells;
+      console.log("IDs vaixells: " + arrayVaixells);
     }
   };
 };

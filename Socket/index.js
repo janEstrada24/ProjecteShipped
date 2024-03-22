@@ -12,12 +12,15 @@ app.use(express.static(path.join(__dirname, "/js")));
 
 const wss = new WebSocket.Server({ server });
 
+let numJugadors = 0;
+let numVaixells = 2;
+let partida = [];
+let vaixells = [];
+let arrayX = [];
+let arrayY = [];
+let idsUsuaris = [];
+
 wss.on("connection", (ws) => {
-    let numJugadors = 0;
-    let numVaixells = 2;
-    let arrayX = [];
-    let arrayY = [];
-    let idsVaixells = [];
     ws.on("message", function incoming(message) {
         try {
             const data = JSON.parse(message);
@@ -35,35 +38,61 @@ wss.on("connection", (ws) => {
                     wss.clients.forEach(function each(client) {
                         numJugadors++;
                         console.log("Jugador sumat: " + numJugadors);
-                        
+                        const idJugador = uuidv4();
+                        idsUsuaris.push(idJugador);
+
+                        for (let k = 0; k < numVaixells; k++) {
+                            var x = "100px";
+                            var y;
+
+                            if (k == 0) {
+                                y = "100px";
+                            } else {
+                                y = "200px";
+                            }
+
+                            vaixells.push({
+                                idVaixell: uuidv4(),
+                                idJugador: idJugador,
+                                x: x,
+                                y: y
+                            });
+                        }
+
                         if (numJugadors == 2) {
                             client.send(JSON.stringify({ numJugadors: numJugadors}));
+                            client.send(JSON.stringify({ vaixells: vaixells}));
 
-                            /**
-                             * Segons el numero de vaixells que volem que hi hagi a la pantalla, es crea per cada vaixell
-                             * una UUID aleatoria que després hauran d'obtenir els usuaris.
-                             * 
-                             * Per altra banda, assignem una posicio aleatoria a cadascun d'aquests vaixells. Aixo fa 
-                             * que tots els usuaris d'una partida vegin un vaixell en concret sempre a la mateixa posicio.
-                             */ 
-                            for (let k = 0; k < numVaixells; k++) {
-                                idsVaixells.push(uuidv4());
-                                const x = Math.floor(Math.random() * data.windowWidth);
-                                const y = Math.floor(Math.random() * data.windowHeight);
-                                arrayX.push(x);
-                                arrayY.push(y);
+                            /*for (let i = 0; i < numJugadors; i++) {
+                                for (let k = 0; k < numVaixells; k++) {
+                                    const x = Math.floor(Math.random() * data.windowWidth);
+                                    const y = Math.floor(Math.random() * data.windowHeight);
+                                    arrayX.push(x);
+                                    arrayY.push(y);
+                                }
                             }
+                            wss.emit("idsVaixells", JSON.stringify(idsVaixells));*/
 
                         }
                     });
                 }
 
                 if (data.demanarIDUsuari) {
-                    wss.emit("idUsuari", JSON.stringify(uuidv4()));
+                    console.log("ID usuari: " + idsUsuaris[0]);
+                    ws.emit("idusuari", JSON.stringify({ idusuari: idsUsuaris[0] }));
+                    idsUsuaris.splice(0, 1);
                 }
 
-                if (data.demanarIDsVaixells) {
-                    wss.emit("idsVaixells", JSON.stringify(idsVaixells));
+                if (data.demanarVaixells) {
+                    /**
+                     * Segons el numero de vaixells que volem que hi hagi a la pantalla, es crea per cada vaixell
+                     * una UUID aleatoria que després hauran d'obtenir els usuaris.
+                     * 
+                     * Per altra banda, assignem una posicio aleatoria a cadascun d'aquests vaixells. Aixo fa 
+                     * que tots els usuaris d'una partida vegin un vaixell en concret sempre a la mateixa posicio.
+                     */ 
+                    ws.emit("vaixells", JSON.stringify({ vaixells: vaixells }));
+                    console.log(vaixells);
                 }
 
             }
