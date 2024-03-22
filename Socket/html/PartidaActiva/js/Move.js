@@ -1,15 +1,15 @@
 window.onload = function () {
-  let vaixells = Array.from(document.getElementsByClassName("vaixells"));
-
-  let speed = 1;
-  let activeImg = 0;
-  let degrees = new Array(vaixells.length).fill(0);
-  let barrils = Array.from(document.getElementsByClassName("barrils"));
   let now;
   let last;
   let idUsuari;
   let arrayVaixells = [];
   const webSocket = new WebSocket("ws://172.23.1.129:3000");
+
+  let vaixells = [];
+  let degrees = [];
+  let barrils = Array.from(document.getElementsByClassName("barrils"));
+  let speed = 1;
+  let activeImg = 0;
 
   /**
    * Afegirem barrils en una posicio aleatoria de la pantalla
@@ -49,30 +49,11 @@ window.onload = function () {
       }
   }
 
-  function addMeteorit() {
-    const windowWidth = window.innerWidth * 0.5;
-    const windowHeight = window.innerHeight * 0.9;
-
-    for (let i = 0; i < 1; i++) {
-      let meteorit = document.createElement("img");
-      meteorit.src = "../../Images/PartidaActiva/Meteorit.png";
-      meteorit.classList.add("Meteorit");
-      meteorit.style.position = "absolute";
-
-      randomWidth = 3;
-      meteorit.style.left = windowWidth / 2 + "px";
-      meteorit.style.top = windowHeight / 2 + "px";
-      meteorit.style.width = `${randomWidth}%`;
-      document.body.appendChild(meteorit);
-    }
-    meteorits = Array.from(document.getElementsByClassName("Meteorit"));
-  }
-
   function checkTime() {
     now = new Date().getTime();
 
     if (last) {
-        if (now - last > 500) {
+        if (now - last >= 500) {
             last = now;
         }
     }
@@ -111,7 +92,6 @@ window.onload = function () {
     requestAnimationFrame(animate);
   }
 
-  animate();
   addMeteorit();
   checkTime();
 
@@ -201,7 +181,6 @@ window.onload = function () {
 
   webSocket.onmessage = function (event) {
     const message = JSON.parse(event.data);
-    console.log(message);
 
     if (message.key) {
       const key = message.key;
@@ -222,12 +201,14 @@ window.onload = function () {
 
     if (message.idusuari) {
       idUsuari = message.idusuari;
-      console.log("ID usuari: " + idUsuari);
     }
 
     if (message.vaixells) {
       arrayVaixells = message.vaixells;
-      console.log("IDs vaixells: " + arrayVaixells);
+      addVaixells(arrayVaixells);
+      vaixells = Array.from(document.getElementsByClassName("vaixells"));
+      degrees = new Array(vaixells.length).fill(0);
+      animate();
     }
   };
 };

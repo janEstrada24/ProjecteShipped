@@ -18,7 +18,6 @@ window.onload = function start() {
 
         if (message.numJugadors) { 
                 window.location.href = "http://" + IP + ":3000/PartidaActiva/partidaActiva.html";
-    
         }
     }
 }

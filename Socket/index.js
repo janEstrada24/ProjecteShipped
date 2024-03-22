@@ -47,8 +47,8 @@ wss.on("connection", (ws) => {
                         const idJugador = uuidv4();
                         idsUsuaris.push(idJugador);
 
-                        var x = "100px";
-                        var y = "200px";
+                        var x = 100;
+                        var y = 200;
 
                         vaixells.push({
                             idVaixell: uuidv4(),
